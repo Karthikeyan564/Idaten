@@ -1,4 +1,4 @@
-module RGB2YCbCr(
+module RGB2YCbCr (
    input clk,
    input rst,
    input [7:0] R,
