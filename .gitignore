@@ -5,7 +5,7 @@
 *.jou
 *.debug
 *.str
-/vivado/
+*/*/build/
 */build/
 *.pyc
 *.rst
