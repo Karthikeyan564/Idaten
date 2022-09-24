@@ -1,4 +1,11 @@
 /obj_dir/
 *.vscode
 *.tiff
-/docs/
+*.log
+*.jou
+*.debug
+*.str
+/vivado/
+*/build/
+*.pyc
+*.rst
