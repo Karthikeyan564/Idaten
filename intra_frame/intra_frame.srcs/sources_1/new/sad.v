@@ -6,10 +6,14 @@ module sad #(
     input [7:0] preds [15:0],
     output sadval);
 
-    integer i, val = 0;
+    initial begin
+        integer i, val = 0;
 
-    for (i = 0; i < 16; i = i + 1) begin
-       val = val + abs(preds[i]); 
+        for (i = 0; i < 16; i = i + 1) begin
+            pred = preds[i];
+            pred = pred < 0 ? pred * -1 : pred;
+            val = val + pred;
+        end
     end
 
 endmodule

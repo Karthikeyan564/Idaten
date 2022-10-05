@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module extract4x4luma #(
+module extract4x4 #(
 	parameter NBLOCKS = 16,
 	parameter LENGTH = 256,
 	parameter WIDTH = 256 ) (
@@ -9,7 +9,7 @@ module extract4x4luma #(
 	input mbstart,
 	output [7:0] mbs [NBLOCKS-1:0][15:0],
 	output [7:0] toppixels [NBLOCKS:0][3:0],
-	output [7:0] leftpixels [3:0]
+	output [7:0] leftpixels [4:0]
 	);
 
 	reg [7:0] image [LENGTH*WIDTH - 1 : 0];
@@ -42,8 +42,8 @@ module extract4x4luma #(
 		end		
 
 		// Fetch leftpixels
-		for (i = 0; i < 4; i = i +1) begin
-			leftpixels[i] = image[row+i][col-1];
+		for (i = -1; i < 4; i = i +1) begin
+			leftpixels[i+1] = image[row+i][col-1];
 		end
 	end
 
