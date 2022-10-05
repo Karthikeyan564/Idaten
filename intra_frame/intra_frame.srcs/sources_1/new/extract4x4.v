@@ -6,11 +6,10 @@ module extract4x4 #(
 	parameter WIDTH = 256 ) (
 	input clk,
 	input reset,
-	input mbstart,
+	input mbnumber,
 	output [7:0] mbs [NBLOCKS-1:0][15:0],
 	output [7:0] toppixels [NBLOCKS:0][3:0],
-	output [7:0] leftpixels [4:0]
-	);
+	output [7:0] leftpixels [4:0]);
 
 	reg [7:0] image [LENGTH*WIDTH - 1 : 0];
 
@@ -20,8 +19,8 @@ module extract4x4 #(
 
 	always @ (posedge clk) begin
 
-		row = mbstart >> 4;
-		col = (mbstart & 63) << 60;
+		row = mbnumber >> 4;
+		col = (mbnumber & 63) << 60;
 
 		// Fetch mbs
 		integer i, j, k;

@@ -28,6 +28,7 @@ module intrapred (
 	reg [7:0] hdres [15:0];
 	reg [7:0] vlres [15:0];
 	reg [7:0] vrres [15:0];
+	reg [7:0] res [15:0];
 
 	// neighbouring pixels
 	wire [7:0] A;
@@ -47,38 +48,21 @@ module intrapred (
 	// sad	
 	reg sads [7:0];
 
-	// Put everything in a loop
-	integer mbcounter, blockcounter;
+	wire mbnumber;
+	wire optimal;
 
-	for (mbcounter = 1; mbcounter <= 4096; mbcounter = mbcounter + NBLOCKS) begin
-
+	initial begin
+		
 		// Retrieve macroblock and neighbouring pixels
 		extract4x4 extractor (
 			.clk(clk), 
 			.reset(reset), 
-			.mbstart(mbcounter), 
+			.mbnumber(mbnumber), 
 			.mbs(mbs),
 			.toppixels(toppixels),
 			.leftpixels(leftpixels));
 
-		for (blockcounter = 0; blockcounter < NBLOCKS; blockcounter = blockcounter + 1) begin
-			
-			// Split pixels into A-M
-			assign A = toppixels[blockcounter][0];
-			assign B = toppixels[blockcounter][1];
-			assign C = toppixels[blockcounter][2];
-			assign D = toppixels[blockcounter][3];
-			assign E = toppixels[blockcounter+1][0];
-			assign F = toppixels[blockcounter+1][1];
-			assign G = toppixels[blockcounter+1][2];
-			assign H = toppixels[blockcounter+1][3];
-			assign M = leftpixels[0];
-			assign I = leftpixels[1];
-			assign J = leftpixels[2];
-			assign K = leftpixels[3];
-			assign L = leftpixels[4];
-
-			// Compute 8 modes
+		// Compute 8 modes
 			VER_Luma vl (
 				.clk(clk),
 				.reset(reset),
@@ -247,7 +231,50 @@ module intrapred (
 			mindex m1 (sads, optimal);
 
 			// Store residual
+			save4x4 saver (optimal, mbnumber, res);
+
+
+	end
+
+	// Put everything in a loop
+	integer mbcounter, blockcounter;
+
+	for (mbcounter = 1; mbcounter <= 4096; mbcounter = mbcounter + NBLOCKS) begin		
+
+		assign mbnumber = mbcounter;
+
+		for (blockcounter = 0; blockcounter < NBLOCKS; blockcounter = blockcounter + 1) begin
 			
+			// Split pixels into A-M
+			assign A = toppixels[blockcounter][0];
+			assign B = toppixels[blockcounter][1];
+			assign C = toppixels[blockcounter][2];
+			assign D = toppixels[blockcounter][3];
+			assign E = toppixels[blockcounter+1][0];
+			assign F = toppixels[blockcounter+1][1];
+			assign G = toppixels[blockcounter+1][2];
+			assign H = toppixels[blockcounter+1][3];
+			assign M = leftpixels[0];
+			assign I = leftpixels[1];
+			assign J = leftpixels[2];
+			assign K = leftpixels[3];
+			assign L = leftpixels[4];
+
+			case (optimal) begin
+				
+				3b'000: res = vres;
+				3b'001: res = hres;
+				3b'010: res = ddlres;
+				3b'011: res = ddrres;
+				3b'100: res = hures;
+				3b'101: res = hdres;
+				3b'110: res = vlres;
+				3b'111: res = vrres;
+
+			endcase
+
+
+
 		end
 	end
 	
