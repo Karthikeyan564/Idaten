@@ -37,13 +37,13 @@ module extract4x4 #(
 		// Fetch toppixels
 		for (i = 0; i <= 16; i = i + 1) begin
 			for (j = 0; j < 4; j = j + 1) begin
-				toppixels[i][j] = image[row-1][col+((i*4)+j)];
+				toppixels[i][j] = image[row-1][col+((i*4)+j)]; // should not come from the image, should come from the pred_frame.
 			end
 		end		
 
 		// Fetch leftpixels
 		for (i = -1; i < 4; i = i +1) begin
-			leftpixels[i+1] = image[row+i][col-1];
+			leftpixels[i+1] = image[row+i][col-1]; // same.
 		end
 	end
 
