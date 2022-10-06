@@ -7,11 +7,15 @@ module extract4x4 #(
 	input clk,
 	input reset,
 	input mbnumber,
-	output [7:0] mbs [NBLOCKS-1:0][15:0],
-	output [7:0] toppixels [NBLOCKS:0][3:0],
-	output [7:0] leftpixels [4:0]);
+	output reg [7:0] mbs [NBLOCKS-1:0][15:0] ,
+	output reg [7:0] toppixels [NBLOCKS:0][3:0] ,
+	output reg [7:0] leftpixels [4:0]);
 
 	reg [7:0] image [LENGTH*WIDTH - 1 : 0];
+	
+	integer row;
+	integer col;
+	integer i,j,k;
 
 	initial begin
 		$readmemh("image.hex", image);
@@ -23,7 +27,7 @@ module extract4x4 #(
 		col = (mbnumber & 63) << 60;
 
 		// Fetch mbs
-		integer i, j, k;
+
 			
 		for (i = 0; i < NBLOCKS; i = i +1) begin
 			for (j = 0; j < 4; j = j + 1) begin

@@ -3,7 +3,8 @@
 module intrapred (
 	input clk,
 	input reset);
-
+    
+    parameter NBLOCKS = 16;
 	// Declarations
 	reg [7:0] mbs [NBLOCKS-1:0][15:0];
 	reg [7:0] toppixels [NBLOCKS:0][3:0];
@@ -31,27 +32,26 @@ module intrapred (
 	reg [7:0] res [15:0];
 
 	// neighbouring pixels
-	wire [7:0] A;
-	wire [7:0] B;
-	wire [7:0] C;
-	wire [7:0] D;
-	wire [7:0] E;
-	wire [7:0] F;
-	wire [7:0] G;
-	wire [7:0] H;
-	wire [7:0] I;
-	wire [7:0] J;
-	wire [7:0] K;
-	wire [7:0] L;
-	wire [7:0] M;
+	reg [7:0] A;
+	reg [7:0] B;
+	reg [7:0] C;
+	reg [7:0] D;
+	reg [7:0] E;
+	reg [7:0] F;
+	reg [7:0] G;
+	reg [7:0] H;
+	reg [7:0] I;
+	reg [7:0] J;
+	reg [7:0] K;
+	reg [7:0] L;
+	reg [7:0] M;
 
 	// sad	
 	reg sads [7:0];
 
-	wire mbnumber;
-	wire optimal;
+	integer mbnumber;
+	integer optimal;
 
-	initial begin
 		
 		// Retrieve macroblock and neighbouring pixels
 		extract4x4 extractor (
@@ -63,7 +63,7 @@ module intrapred (
 			.leftpixels(leftpixels));
 
 		// Compute 8 modes
-			VER_Luma vl (
+			ver4x4luma ve (
 				.clk(clk),
 				.reset(reset),
 				.A(A),
@@ -81,7 +81,7 @@ module intrapred (
 				.M(M),
 				.pred_pixels(vpred));
 
-			HOR_Luma hl (
+			hor4x4luma hl (
 				.clk(clk),
 				.reset(reset),
 				.A(A),
@@ -234,10 +234,11 @@ module intrapred (
 			save4x4 saver (optimal, mbnumber, res);
 
 
-	end
 
 	// Put everything in a loop
 	integer mbcounter, blockcounter;
+	
+	always @(posedge clk) begin
 
 	for (mbcounter = 1; mbcounter <= 4096; mbcounter = mbcounter + NBLOCKS) begin		
 
@@ -260,20 +261,21 @@ module intrapred (
 			assign K = leftpixels[3];
 			assign L = leftpixels[4];
 
-			case (optimal) begin
+			case (optimal)
 				
-				3b'000: res = vres;
-				3b'001: res = hres;
-				3b'010: res = ddlres;
-				3b'011: res = ddrres;
-				3b'100: res = hures;
-				3b'101: res = hdres;
-				3b'110: res = vlres;
-				3b'111: res = vrres;
+				3'b000: res = vres;
+				3'b001: res = hres;
+				3'b010: res = ddlres;
+				3'b011: res = ddrres;
+				3'b100: res = hures;
+				3'b101: res = hdres;
+				3'b110: res = vlres;
+				3'b111: res = vrres;
+				default: res = vres;
 
 			endcase
 
-
+    end
 
 		end
 	end
