@@ -36,26 +36,26 @@ module hor4x4luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] hpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <=I;
-            out_pred[1] <=I;
-            out_pred[2] <=I;
-            out_pred[3] <=I;
-            out_pred[4] <=J;
-            out_pred[5] <=J;
-            out_pred[6] <=J;
-            out_pred[7] <=J;
-            out_pred[8] <=K;
-            out_pred[9] <=K;
-            out_pred[10] <=K;
-            out_pred[11] <=K;
-            out_pred[12] <=L;
-            out_pred[13] <=L;
-            out_pred[14] <=L;
-            out_pred[15] <=L;       
+            hpred[0] <=I;
+            hpred[1] <=I;
+            hpred[2] <=I;
+            hpred[3] <=I;
+            hpred[4] <=J;
+            hpred[5] <=J;
+            hpred[6] <=J;
+            hpred[7] <=J;
+            hpred[8] <=K;
+            hpred[9] <=K;
+            hpred[10] <=K;
+            hpred[11] <=K;
+            hpred[12] <=L;
+            hpred[13] <=L;
+            hpred[14] <=L;
+            hpred[15] <=L;       
         end     
         
 

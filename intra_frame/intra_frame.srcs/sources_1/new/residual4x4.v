@@ -8,7 +8,6 @@ module residual4x4 (
     integer i;
 	initial begin
 		
-
 		for (i = 0; i < 16; i = i + 1) begin
 			res[i] = mb[i] - pred[i];
 		end

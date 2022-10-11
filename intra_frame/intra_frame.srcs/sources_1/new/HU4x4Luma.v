@@ -57,26 +57,26 @@ module HU4x4Luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] hupred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <= (J+I+1)>>1; //a
-            out_pred[1] <= (K+2*J+I)>>2;//b
-            out_pred[2] <= (K+J+1)>>1;//c
-            out_pred[3] <= (L+2*K+J+2)>>2;//d
-            out_pred[4] <= (K+J+1)>>1;//e
-            out_pred[5] <= (L+2*K+J+2)>>2;//f
-            out_pred[6] <= (L+K+1)>>1;//g
-            out_pred[7] <= (3*L+J+2)>>2;//h
-            out_pred[8] <= (L+K+1)>>1;//i
-            out_pred[9] <= (3*L+J+2)>>2;//j
-            out_pred[10] <=L;//k
-            out_pred[11] <=L;//l
-            out_pred[12] <=L;//m
-            out_pred[13] <=L;;//n
-            out_pred[14] <=L;//o
-            out_pred[15] <=L;//p       
+            hupred[0] <= (J+I+1)>>1; //a
+            hupred[1] <= (K+2*J+I)>>2;//b
+            hupred[2] <= (K+J+1)>>1;//c
+            hupred[3] <= (L+2*K+J+2)>>2;//d
+            hupred[4] <= (K+J+1)>>1;//e
+            hupred[5] <= (L+2*K+J+2)>>2;//f
+            hupred[6] <= (L+K+1)>>1;//g
+            hupred[7] <= (3*L+J+2)>>2;//h
+            hupred[8] <= (L+K+1)>>1;//i
+            hupred[9] <= (3*L+J+2)>>2;//j
+            hupred[10] <=L;//k
+            hupred[11] <=L;//l
+            hupred[12] <=L;//m
+            hupred[13] <=L;;//n
+            hupred[14] <=L;//o
+            hupred[15] <=L;//p       
         end     
         
 

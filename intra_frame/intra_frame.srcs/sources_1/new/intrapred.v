@@ -51,7 +51,6 @@ module intrapred (
 
 	integer mbnumber;
 	integer optimal;
-
 		
 		// Retrieve macroblock and neighbouring pixels
 		extract4x4 extractor (
@@ -60,180 +59,16 @@ module intrapred (
 			.mbnumber(mbnumber), 
 			.mbs(mbs),
 			.toppixels(toppixels),
-			.leftpixels(leftpixels));
+			.leftpixels(leftpixels));			
 
-		// Compute 8 modes
-			ver4x4luma ve (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(vpred));
+		// 8 modes
 
-			hor4x4luma hl (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(hpred));
+		// Compute Residual
 
-			DDL4x4Luma ddl (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(ddlpred));
+		// Compute SAD
 
-			DDR4x4Luma ddr (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(ddrpred));		
-
-			HU4x4Luma hu (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(hupred));
-
-			HD4x4Luma hd (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(hdpred));	
-
-			VL4x4Luma vl (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(vlpred));
-
-			VR4x4Luma vr (
-				.clk(clk),
-				.reset(reset),
-				.A(A),
-				.B(B),
-				.C(C),
-				.D(D),
-				.E(E),
-				.F(F),
-				.G(G),
-				.H(H),
-				.I(I),
-				.J(J),
-				.K(K),
-				.L(L),
-				.M(M),
-				.pred_pixels(vrpred));
-			
-			// Compute Residual
-			residual4x4 r1 (mb, vpred, vres);
-			residual4x4 r2 (mb, hpred, hres);
-			residual4x4 r3 (mb, ddlpred, ddlres);
-			residual4x4 r4 (mb, ddrpred, ddrres);
-			residual4x4 r5 (mb, hupred, hures);
-			residual4x4 r6 (mb, hdpred, hdres);
-			residual4x4 r7 (mb, vlpred, vlres);
-			residual4x4 r8 (mb, vrpred, vrres);
-
-			// Compute SAD
-			sad s1 (vres, sads[0]);
-			sad s2 (hres, sads[1]);
-			sad s3 (ddlres, sads[2]);
-			sad s4 (ddrres, sads[3]);
-			sad s5 (hures, sads[4]);
-			sad s6 (hdres, sads[5]);
-			sad s7 (vlres, sads[6]);
-			sad s8 (vrres, sads[7]);
-
-			// Make decision
-			mindex m1 (sads, optimal);
-
-			// Store residual
-			save4x4 saver (optimal, mbnumber, res);
-
-
+		// Make decision and store residual
+		save4x4 saver (optimal, mbnumber, res);
 
 	// Put everything in a loop
 	integer mbcounter, blockcounter;

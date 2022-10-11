@@ -36,26 +36,26 @@ module DDR4x4Luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] ddrpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <= (I+2*M+A+2)>>2; //a
-            out_pred[1] <= (M+2*A+B+2)>>2;//b
-            out_pred[2] <= (A+2*B+C+2)>>2;//c
-            out_pred[3] <= (B+2*C+D+2)>>2;//d
-            out_pred[4] <= (J+2*I+M+2)>>2;//e
-            out_pred[5] <= (I+2*M+A+2)>>2;//f
-            out_pred[6] <= (M+2*A+B+2)>>2;//g
-            out_pred[7] <= (A+2*B+C+2)>>2;//h
-            out_pred[8] <= (K+2*J+I+2)>>2;//i
-            out_pred[9] <= (J+2*I+M+2)>>2;//j
-            out_pred[10] <=(I+2*M+A+2)>>2;//k
-            out_pred[11] <=(M+2*A+B+2)>>2;//l
-            out_pred[12] <=(L+2*K+J+2)>>1;//m
-            out_pred[13] <=(K+2*J+I+2)>>2;//n
-            out_pred[14] <=(J+2*I+M+2)>>2;//o
-            out_pred[15] <=(I+2*M+A+2)>>2;//[       
+            ddrpred[0] <= (I+2*M+A+2)>>2; //a
+            ddrpred[1] <= (M+2*A+B+2)>>2;//b
+            ddrpred[2] <= (A+2*B+C+2)>>2;//c
+            ddrpred[3] <= (B+2*C+D+2)>>2;//d
+            ddrpred[4] <= (J+2*I+M+2)>>2;//e
+            ddrpred[5] <= (I+2*M+A+2)>>2;//f
+            ddrpred[6] <= (M+2*A+B+2)>>2;//g
+            ddrpred[7] <= (A+2*B+C+2)>>2;//h
+            ddrpred[8] <= (K+2*J+I+2)>>2;//i
+            ddrpred[9] <= (J+2*I+M+2)>>2;//j
+            ddrpred[10] <=(I+2*M+A+2)>>2;//k
+            ddrpred[11] <=(M+2*A+B+2)>>2;//l
+            ddrpred[12] <=(L+2*K+J+2)>>1;//m
+            ddrpred[13] <=(K+2*J+I+2)>>2;//n
+            ddrpred[14] <=(J+2*I+M+2)>>2;//o
+            ddrpred[15] <=(I+2*M+A+2)>>2;//[       
         end     
         
 

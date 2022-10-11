@@ -36,26 +36,26 @@ module HD4x4Luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] hdpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <= (I+M+1)>>1; //a
-            out_pred[1] <= (I+2*M+A+2)>>2;//b
-            out_pred[2] <= (M+2*A+B+2)>>2;//c
-            out_pred[3] <= (A+2*B+C+2)>>2;//d
-            out_pred[4] <= (J+I+1)>>1;//e
-            out_pred[5] <= (J+2*I+M+2)>>2;//f
-            out_pred[6] <= (I+M+1)>>1;//g
-            out_pred[7] <= (I+2*M+A+2)>>2;//h
-            out_pred[8] <= (K+J+1)>>1;//i
-            out_pred[9] <= (K+2*J+I+2)>>2;//j
-            out_pred[10] <=(J+I+1)>>1;//k
-            out_pred[11] <=(J+2*I+M+2)>>2;//l
-            out_pred[12] <=(L+K+1)>>1;//m
-            out_pred[13] <=(L+2*K+J+2)>>2;;//n
-            out_pred[14] <=(K+J+1)>>1;;//o
-            out_pred[15] <=(K+2*J+I+2)>>2;//p       
+            hdpred[0] <= (I+M+1)>>1; //a
+            hdpred[1] <= (I+2*M+A+2)>>2;//b
+            hdpred[2] <= (M+2*A+B+2)>>2;//c
+            hdpred[3] <= (A+2*B+C+2)>>2;//d
+            hdpred[4] <= (J+I+1)>>1;//e
+            hdpred[5] <= (J+2*I+M+2)>>2;//f
+            hdpred[6] <= (I+M+1)>>1;//g
+            hdpred[7] <= (I+2*M+A+2)>>2;//h
+            hdpred[8] <= (K+J+1)>>1;//i
+            hdpred[9] <= (K+2*J+I+2)>>2;//j
+            hdpred[10] <=(J+I+1)>>1;//k
+            hdpred[11] <=(J+2*I+M+2)>>2;//l
+            hdpred[12] <=(L+K+1)>>1;//m
+            hdpred[13] <=(L+2*K+J+2)>>2;;//n
+            hdpred[14] <=(K+J+1)>>1;;//o
+            hdpred[15] <=(K+2*J+I+2)>>2;//p       
         end     
         
 

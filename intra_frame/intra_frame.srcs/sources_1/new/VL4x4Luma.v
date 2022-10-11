@@ -57,26 +57,26 @@ module VL4x4Luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] vlpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <= (A+B+1)>>1; //a
-            out_pred[1] <= (B+C+1)>>1;//b
-            out_pred[2] <= (C+D+1)>>1;//c
-            out_pred[3] <= (D+E+1)>>1;//d
-            out_pred[4] <= (A+2*B+C)>>2;//e
-            out_pred[5] <= (B+2*C+D+2)>>2;//f
-            out_pred[6] <= (C+2*D+E+2)>>2;//g
-            out_pred[7] <= (D+2*E+F+2)>>2;//h
-            out_pred[8] <= (E+F+1)>>1;//i
-            out_pred[9] <= (C+D+1)>>1;//j
-            out_pred[10] <=(J+I+1)>>1;//k
-            out_pred[11] <=(J+2*I+M+2)>>2;//l
-            out_pred[12] <=(B+2*C+D+2)>>2;//m
-            out_pred[13] <=(C+2*D+E+2)>>2;//n
-            out_pred[14] <=(D+2*E+F+2)>>2;//o
-            out_pred[15] <=(E+2*F+G+2)>>2;//p       
+            vlpred[0] <= (A+B+1)>>1; //a
+            vlpred[1] <= (B+C+1)>>1;//b
+            vlpred[2] <= (C+D+1)>>1;//c
+            vlpred[3] <= (D+E+1)>>1;//d
+            vlpred[4] <= (A+2*B+C)>>2;//e
+            vlpred[5] <= (B+2*C+D+2)>>2;//f
+            vlpred[6] <= (C+2*D+E+2)>>2;//g
+            vlpred[7] <= (D+2*E+F+2)>>2;//h
+            vlpred[8] <= (E+F+1)>>1;//i
+            vlpred[9] <= (C+D+1)>>1;//j
+            vlpred[10] <=(J+I+1)>>1;//k
+            vlpred[11] <=(J+2*I+M+2)>>2;//l
+            vlpred[12] <=(B+2*C+D+2)>>2;//m
+            vlpred[13] <=(C+2*D+E+2)>>2;//n
+            vlpred[14] <=(D+2*E+F+2)>>2;//o
+            vlpred[15] <=(E+2*F+G+2)>>2;//p       
         end     
         
 

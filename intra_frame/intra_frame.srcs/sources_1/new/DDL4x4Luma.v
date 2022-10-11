@@ -36,26 +36,26 @@ module DDL4x4Luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] ddlpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <= (A+2*B+C+2)>>2;
-            out_pred[1] <= (B+2*C+D+2)>>2;
-            out_pred[2] <= (C+2*D+E+2)>>2;
-            out_pred[3] <= (D+2*E+F+2)>>2;
-            out_pred[4] <= (B+2*C+D+2)>>2;
-            out_pred[5] <= (C+2*D+E+2)>>2;
-            out_pred[6] <= (D+2*E+F+2)>>2;
-            out_pred[7] <= (E+2*F+G+2)>>2;
-            out_pred[8] <= (C+2*D+E+2)>>2;
-            out_pred[9] <= (D+2*E+F+2)>>2;
-            out_pred[10] <=(E+2*F+G+2)>>2;
-            out_pred[11] <=(F+2*G+H+2)>>2;
-            out_pred[12] <=(D+2*E+F+2)>>2;
-            out_pred[13] <=(E+2*F+G+2)>>2;
-            out_pred[14] <=(F+2*G+H+2)>>2;
-            out_pred[15] <= (G+3*H+2)>>2;       
+            ddlpred[0] <= (A+2*B+C+2)>>2;
+            ddlpred[1] <= (B+2*C+D+2)>>2;
+            ddlpred[2] <= (C+2*D+E+2)>>2;
+            ddlpred[3] <= (D+2*E+F+2)>>2;
+            ddlpred[4] <= (B+2*C+D+2)>>2;
+            ddlpred[5] <= (C+2*D+E+2)>>2;
+            ddlpred[6] <= (D+2*E+F+2)>>2;
+            ddlpred[7] <= (E+2*F+G+2)>>2;
+            ddlpred[8] <= (C+2*D+E+2)>>2;
+            ddlpred[9] <= (D+2*E+F+2)>>2;
+            ddlpred[10] <=(E+2*F+G+2)>>2;
+            ddlpred[11] <=(F+2*G+H+2)>>2;
+            ddlpred[12] <=(D+2*E+F+2)>>2;
+            ddlpred[13] <=(E+2*F+G+2)>>2;
+            ddlpred[14] <=(F+2*G+H+2)>>2;
+            ddlpred[15] <= (G+3*H+2)>>2;       
         end     
         
 

@@ -19,8 +19,6 @@ module save4x4 (
 		col = (mbnumber & 63) << 60;
 
         modes[mbnumber] = optimal;
-        
-        
 
         for (i = 0; i < 4; i = i +1) begin
             for (j = 0; j < 4; j = j + 1) begin

@@ -35,26 +35,26 @@ module ver4x4luma(
     input [7:0] K,
     input [7:0] L,
     input [7:0] M,
-    output reg [7:0] out_pred [15:0]
+    output reg [7:0] vpred [15:0]
     );
     
         always @(posedge clk) begin
-            out_pred[0] <=I;
-            out_pred[1] <=J;
-            out_pred[2] <=K;
-            out_pred[3] <=L;
-            out_pred[4] <=I;
-            out_pred[5] <=J;
-            out_pred[6] <=K;
-            out_pred[7] <=L;
-            out_pred[8] <=I;
-            out_pred[9] <=J;
-            out_pred[10] <=K;
-            out_pred[11] <=L;
-            out_pred[12] <=I;
-            out_pred[13] <=J;
-            out_pred[14] <=K;
-            out_pred[15] <=L;       
+            vpred[0] <=I;
+            vpred[1] <=J;
+            vpred[2] <=K;
+            vpred[3] <=L;
+            vpred[4] <=I;
+            vpred[5] <=J;
+            vpred[6] <=K;
+            vpred[7] <=L;
+            vpred[8] <=I;
+            vpred[9] <=J;
+            vpred[10] <=K;
+            vpred[11] <=L;
+            vpred[12] <=I;
+            vpred[13] <=J;
+            vpred[14] <=K;
+            vpred[15] <=L;       
         end     
         
 
