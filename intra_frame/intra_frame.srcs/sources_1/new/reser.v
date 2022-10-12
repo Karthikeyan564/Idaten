@@ -21,23 +21,25 @@ module reser (
 	output reg [7:0] hdres [15:0],
     output reg [7:0] ddlres [15:0],
 	output reg [7:0] ddrres [15:0]);
+	
+	integer i;
 
     always @(posedge clk) begin
 
         if (enable) begin
 
-            integer i;
+            
 
             for (i = 0; i < 16; i = i + 1) begin
 
-                vres[i] = mb[i] - vpred[i];
-                hres[i] = mb[i] - hpred[i];
-                vlres[i] = mb[i] - vlpred[i];
-                vrres[i] = mb[i] - vrpred[i];
-                hures[i] = mb[i] - hupred[i];
-                hdres[i] = mb[i] - hdpred[i];
-                ddlres[i] = mb[i] - ddlpred[i];
-                ddrres[i] = mb[i] - ddrpred[i];
+                vres[i] <= mb[i] - vpred[i];
+                hres[i] <= mb[i] - hpred[i];
+                vlres[i] <= mb[i] - vlpred[i];
+                vrres[i] <= mb[i] - vrpred[i];
+                hures[i] <= mb[i] - hupred[i];
+                hdres[i] <= mb[i] - hdpred[i];
+                ddlres[i] <= mb[i] - ddlpred[i];
+                ddrres[i] <= mb[i] - ddrpred[i];
 
             end
 

@@ -6,7 +6,7 @@ module saver #(
     input clk,
     input reset,
     input enable,
-    input sads [7:0],
+    input [7:0] sads [7:0],
     input [7:0] vres [15:0],
 	input [7:0] hres [15:0],
     input [7:0] vlres [15:0],
@@ -25,13 +25,13 @@ module saver #(
     reg [7:0] row;
     reg [7:0] col;
 
-    wire [7:0] res [15:0];
+    reg [7:0] res [15:0];
 
     always @(posedge clk) begin
         
         if (enable) begin
 
-            assign min = 0;
+            min = 0;
             
             for (i = 1; i < 8; i = i + 1) begin
             

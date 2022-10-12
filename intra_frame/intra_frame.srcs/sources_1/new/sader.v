@@ -12,7 +12,7 @@ module sader (
 	input [7:0] hdres [15:0],
     input [7:0] ddlres [15:0],
 	input [7:0] ddrres [15:0],
-    output reg sads [7:0]);
+    output reg [7:0] sads [7:0] );
 
     reg [7:0] vsamp;
     reg [7:0] hsamp;
@@ -22,25 +22,30 @@ module sader (
     reg [7:0] hdsamp;
     reg [7:0] ddlsamp;
     reg [7:0] ddrsamp;
+    
+    integer i;
+    integer j;
 
     always @(posedge clk) begin
-
-        assign sads = 8'b0000000;
+        
+        
 
         if (enable) begin
 
-            integer i;
+            for(j =0; j<8;j=j+1)begin
+                sads[j] = 8'b00000000;
+            end
 
             for (i = 0; i < 16; i = i + 1) begin
                 
-                vsamp = vres[i]; vsamp = vsamp < 0 ? vsamp * -1 : vsamp; sads[0] = sads[0] + 1;
-                hsamp = hres[i]; hsamp = hsamp < 0 ? hsamp * -1 : hsamp; sads[1] = sads[1] + 1;
-                vlsamp = vlres[i]; vlsamp = vlsamp < 0 ? vlsamp * -1 : vlsamp; sads[2] = sads[2] + 1;
-                vrsamp = vrres[i]; vrsamp = vrsamp < 0 ? vrsamp * -1 : vrsamp; sads[3] = sads[3] + 1;
-                husamp = hures[i]; husamp = husamp < 0 ? husamp * -1 : husamp; sads[4] = sads[4] + 1;
-                hdsamp = hdres[i]; hdsamp = hdsamp < 0 ? hdsamp * -1 : hdsamp; sads[5] = sads[5] + 1;
-                ddlsamp = ddlres[i]; ddlsamp = ddlsamp < 0 ? ddlsamp * -1 : ddlsamp; sads[6] = sads[6] + 1;
-                ddrsamp = ddrres[i]; ddrsamp = ddrsamp < 0 ? ddrsamp * -1 : ddrsamp; sads[7] = sads[7] + 1;
+                vsamp = vres[i]; vsamp = vsamp < 0 ? vsamp * -1 : vsamp; sads[0] = sads[0] + vsamp; 
+                hsamp = hres[i]; hsamp = hsamp < 0 ? hsamp * -1 : hsamp; sads[1] = sads[1] + hsamp;
+                vlsamp = vlres[i]; vlsamp = vlsamp < 0 ? vlsamp * -1 : vlsamp; sads[2] = sads[2] + vlsamp;
+                vrsamp = vrres[i]; vrsamp = vrsamp < 0 ? vrsamp * -1 : vrsamp; sads[3] = sads[3] + vrsamp;
+                husamp = hures[i]; husamp = husamp < 0 ? husamp * -1 : husamp; sads[4] = sads[4] + husamp;
+                hdsamp = hdres[i]; hdsamp = hdsamp < 0 ? hdsamp * -1 : hdsamp; sads[5] = sads[5] + hdsamp;
+                ddlsamp = ddlres[i]; ddlsamp = ddlsamp < 0 ? ddlsamp * -1 : ddlsamp; sads[6] = sads[6] + ddlsamp;
+                ddrsamp = ddrres[i]; ddrsamp = ddrsamp < 0 ? ddrsamp * -1 : ddrsamp; sads[7] = sads[7] + ddrsamp;
 
             end
 

@@ -26,10 +26,10 @@ module extractor #(
 
 		if (enable) begin
 
-            mb = mbintermediate;
+            mb <= mbintermediate;
 
-            row = mbnumber >> 4;
-            col = (mbnumber & 63) << 60;
+            row <= mbnumber >> 4;
+            col <= (mbnumber & 63) << 60;
 
             // Fetch mb
             for (j = 0; j < 4; j = j + 1) begin
