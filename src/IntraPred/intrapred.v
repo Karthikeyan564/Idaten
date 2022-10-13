@@ -49,6 +49,7 @@ module intrapred (
 
 	// sad	
 	wire [7:0] sads [7:0];
+	reg [2:0] mode;
 		
 	// Retrieve macroblock and neighbouring pixels		
 	extractor uextractor (
@@ -139,6 +140,7 @@ module intrapred (
 		.hdres(hdres),
 		.ddlres(ddlres),
 		.ddrres(ddrres),
-		.mbnumber(mbnumber));
+		.mbnumber(mbnumber),
+		.mode(mode));
 	
 endmodule

@@ -15,7 +15,8 @@ module saver #(
 	input [7:0] hdres [15:0],
     input [7:0] ddlres [15:0],
 	input [7:0] ddrres [15:0],
-    input [12:0] mbnumber);
+    input [12:0] mbnumber,
+    output reg [2:0] mode);
 
     integer i, j;
     
@@ -43,6 +44,7 @@ module saver #(
             col = (mbnumber & 63) << 60;
 
             modes[mbnumber] = min;
+            mode = min;
 
             case (min)
 				
@@ -60,7 +62,7 @@ module saver #(
 
             for (i = 0; i < 4; i = i +1) begin
                 for (j = 0; j < 4; j = j + 1) begin
-                    residues[(row*256)+col] = res[(i*4)+j];
+                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j];
                 end
             end
 
