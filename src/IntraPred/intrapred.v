@@ -4,7 +4,7 @@ module intrapred (
 	input clk,
 	input reset,
 	input enable,
-	input mbnumber);
+	input [12:0] mbnumber);
     
 	// Declarations
 	wire [7:0] mb [15:0];
@@ -45,7 +45,7 @@ module intrapred (
 	wire [7:0] hdres [15:0];
 	wire [7:0] vlres [15:0];
 	wire [7:0] vrres [15:0];
-	wire [7:0] res [15:0];
+
 
 	// sad	
 	wire [7:0] sads [7:0];
