@@ -25,7 +25,7 @@ module mode16(
     input reset,
     input [15:0] toppixels [7:0],
     input en,
-    input [16:0] leftpixels [7:0],
+    input [15:0] leftpixels [7:0],
     output reg [255:0] vpred16 [7:0],
     output reg [255:0] hpred16 [7:0],
     output reg [255:0] dcpred16 [7:0]
@@ -45,7 +45,7 @@ module mode16(
              //horizontal
             for(i=0; i<16; i=i+1) begin
                 for(j=0;j<16; j=j+1)
-                    hpred16[j + 16*i] = leftpixels[i+1];
+                    hpred16[j + 16*i] = leftpixels[i];
              end
              
              //dc
