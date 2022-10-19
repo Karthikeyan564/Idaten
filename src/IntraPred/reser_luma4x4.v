@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module reser (
+module reser_luma4x4 (
     input clk,
     input reset,
     input enable,

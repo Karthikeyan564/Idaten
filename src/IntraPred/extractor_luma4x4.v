@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module extractor #(
+module extractor_luma4x4 #(
     parameter LENGTH = 256,
     parameter WIDTH = 256 )(
     input clk,
@@ -28,24 +28,24 @@ module extractor #(
 
             mb <= mbintermediate;
 
-            row <= mbnumber >> 4;
-            col <= (mbnumber & 63) << 60;
+            row <= (mbnumber >> 6) << 2;
+            col <= ((mbnumber & 63) >> 4) << 6;
 
             // Fetch mb
             for (j = 0; j < 4; j = j + 1) begin
                 for (k = 0; k < 4; k = k +1) begin
-                    mbintermediate[(j*4) + k] = image[(256*(row+j)) + (col+k)];
+                    mbintermediate[(j<<2) + k] = image[((row+j)<<8) + (col+k)];
                 end
             end
             
             // Fetch toppixels
             for (j = 0; j < 8; j = j + 1) begin
-                toppixels[j] = (row == 0 ? 128 : (image[(256*(row-1)) + (col+j)])); // should not come from the image, should come from the pred_frame.
+                toppixels[j] = (row == 0 ? 128 : (image[((row-1)<<8) + (col+j)])); // should not come from the image, should come from the pred_frame.
             end
 
             // Fetch leftpixels
             for (i = -1; i < 4; i = i +1) begin
-                leftpixels[i+1] = (((row+i) < 0 || (col == 0)) ? 128 : (image[(256*(row+i)) + (col-1)])); // same.
+                leftpixels[i+1] = (((row+i) < 0 || (col == 0)) ? 128 : (image[((row+i)<<8) + (col-1)])); // same.
             end
             
         end
