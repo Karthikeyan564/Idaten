@@ -153,11 +153,11 @@ module intrapred (
 		.reset(reset),
 		.enable(enable),
 		.mb(mb_luma16x16),
-		.vpred(vpred_luma4x4),
-		.hpred(hpred_luma4x4),
+		.vpred(vpred_luma16x16),
+		.hpred(hpred_luma16x16),
 		.dcpred(dcres_luma16x16),
-		.vres(vres_luma4x4),
-		.hres(hres_luma4x4),
+		.vres(vres_luma16x16),
+		.hres(hres_luma16x16),
 		.dcres(dcres_luma16x16));
     
 	// Compute SAD
@@ -183,7 +183,7 @@ module intrapred (
 		.enable(enable),
 		.vres(vres_luma16x16),
 		.hres(hres_luma16x16),
-		.dcres(ddrres_luma16x16),
+		.dcres(dcres_luma16x16),
 		.sads(sads_luma16x16));
 		
 	// Make decision and store residual
@@ -212,7 +212,7 @@ module intrapred (
 		.sads(sads_luma16x16),
 		.vres(vres_luma16x16),
 		.hres(hres_luma16x16),
-		.dcres(vlres_luma16x16),
+		.dcres(dcres_luma16x16),
 		.mbnumber(mbnumber),
 		.mode(mode_luma16x16));
 	

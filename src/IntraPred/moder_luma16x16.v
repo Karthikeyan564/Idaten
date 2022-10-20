@@ -11,7 +11,7 @@ module moder_luma16x16(
     output reg [7:0] dcpred [255:0]);
     
     integer i,j,k;
-    reg [12:0] sum;
+    reg [12:0] sum = 0;
     
     always @(posedge clk) begin
     
