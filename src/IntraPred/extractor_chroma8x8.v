@@ -29,7 +29,7 @@ module extractor_chroma8x8 #(
             mb <= mbintermediate;
 
             row <= (mbnumber >> 5) << 3;
-            col <= ((mbnumber & 31) >> 3) << 3;
+            col <= ((mbnumber & 31) - 1) << 3;
 
             // Fetch mb
             for (j = 0; j < 8; j = j + 1) begin
