@@ -12,9 +12,10 @@ module moder_luma16x16(
     
     integer i,j,k;
     reg [12:0] sum;
+
     
     always @(posedge clk) begin
-    
+        sum = 12'b000000000000;
         if (enable == 1) begin 
         
             //vertical
