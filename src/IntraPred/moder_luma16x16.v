@@ -11,12 +11,7 @@ module moder_luma16x16(
     output reg [7:0] dcpred [255:0]);
     
     integer i,j,k;
-<<<<<<< HEAD
-    reg [12:0] sum;
-
-=======
     reg [12:0] sum = 0;
->>>>>>> 21859394f590c3a4735b726ab2a90d6d63d76a10
     
     always @(posedge clk) begin
         sum = 12'b000000000000;
