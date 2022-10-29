@@ -20,7 +20,7 @@ module sader_luma16x16 (
 
         if (enable) begin
 
-            for(j =0; j<8;j=j+1)begin
+            for(j =0; j<3;j=j+1)begin
                 sads[j] = 8'b00000000;
             end
 

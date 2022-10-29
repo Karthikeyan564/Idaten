@@ -1,15 +1,36 @@
-`timescale 1ns/1ps
 
-module saver_luma16x16 #(
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 30.10.2022 01:59:27
+// Design Name: 
+// Module Name: saver_chroma8x8
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+module saver_chroma8x8 #(
     parameter LENGTH = 256,
     parameter WIDTH = 256 )(
     input clk,
     input reset,
     input enable,
     input [7:0] sads [2:0],
-    input [7:0] vres [255:0],
-	input [7:0] hres [255:0],
-    input [7:0] dcres [255:0],
+    input [7:0] vres [63:0],
+	input [7:0] hres [63:0],
+    input [7:0] dcres [63:0],
     input [8:0] mbnumber,
     output reg [2:0] mode);
 
@@ -17,11 +38,11 @@ module saver_luma16x16 #(
     
     reg [2:0] min;
     reg [7:0] residues [LENGTH*WIDTH-1:0];
-    reg [2:0] modes [256:0];
+    reg [2:0] modes [63:0];
     reg [7:0] row;
     reg [7:0] col;
 
-    reg [7:0] res [255:0];
+    reg [3:0] res [63:0];
 
     always @(posedge clk) begin
         
@@ -35,8 +56,8 @@ module saver_luma16x16 #(
 
             end 
             
-            row <= (mbnumber >> 4) << 4;
-            col <= ((mbnumber & 15) - 1) << 4;
+            row <= (mbnumber >> 4) << 4; //math??
+            col <= ((mbnumber & 15) - 1) << 4; //math?
 
             modes[mbnumber] = min;
             mode = min;
@@ -52,12 +73,11 @@ module saver_luma16x16 #(
 
             for (i = 0; i < 4; i = i +1) begin
                 for (j = 0; j < 4; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j]; //is this right??
+                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j]; //math??
                 end
             end
 
         end
 
     end
-
 endmodule
