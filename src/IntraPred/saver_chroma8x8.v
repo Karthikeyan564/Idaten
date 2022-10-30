@@ -10,16 +10,16 @@ module saver_chroma8x8 #(
     input [7:0] vres [63:0],
 	input [7:0] hres [63:0],
     input [7:0] dcres [63:0],
-    input [8:0] mbnumber,
+    input [12:0] mbnumber,
     output reg [2:0] mode);
 
-    integer i, j;
+    reg [4:0] i, j;
     
     reg [2:0] min;
     reg [7:0] residues [LENGTH*WIDTH-1:0];
     reg [2:0] modes [63:0];
-    reg [7:0] row;
-    reg [7:0] col;
+    reg [12:0] row;
+    reg [12:0] col;
 
     reg [7:0] res [63:0];
 
@@ -29,16 +29,16 @@ module saver_chroma8x8 #(
 
             min = 0;
             
-            for (i = 1; i < 3; i = i + 1) begin
+            for (i = 1; i < 8; i = i + 1) begin
             
-                if (sads[i] < sads[min]) min = i;
+                if (sads[2'(i)] < sads[2'(min)]) min = 3'(i);
 
             end 
             
             row <= (mbnumber >> 5) << 3;
             col <= ((mbnumber & 31) - 1) << 3;
 
-            modes[mbnumber] = min;
+            modes[6'(mbnumber)] = min;
             mode = min;
 
             case (min)
@@ -52,7 +52,7 @@ module saver_chroma8x8 #(
 
             for (i = 0; i < 8; i = i +1) begin
                 for (j = 0; j < 8; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*8)+j]; 
+                    residues[(256*(row+13'(i)))+(col+13'(j))] = res[(i*8)+j]; 
                 end
             end
 

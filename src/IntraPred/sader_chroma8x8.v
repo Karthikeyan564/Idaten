@@ -1,24 +1,3 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 30.10.2022 02:00:30
-// Design Name: 
-// Module Name: sadchroma8x8
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 `timescale 1ns/1ps
 
 module sader_chroma8x8 (
@@ -30,9 +9,9 @@ module sader_chroma8x8 (
 	input [7:0] dcres [63:0],
     output reg [7:0] sads [2:0]);
 
-    reg [7:0] vsamp8;
-    reg [7:0] hsamp8;
-    reg [7:0] dcsamp8;
+    reg signed [7:0] vsamp8;
+    reg signed [7:0] hsamp8;
+    reg signed [7:0] dcsamp8;
     
     integer i;
     integer j;

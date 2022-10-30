@@ -14,14 +14,14 @@ module sader_luma4x4 (
 	input [7:0] ddrres [15:0],
     output reg [7:0] sads [7:0] );
 
-    reg [7:0] vsamp;
-    reg [7:0] hsamp;
-    reg [7:0] vlsamp;
-    reg [7:0] vrsamp;
-    reg [7:0] husamp;
-    reg [7:0] hdsamp;
-    reg [7:0] ddlsamp;
-    reg [7:0] ddrsamp;
+    reg signed [7:0] vsamp;
+    reg signed [7:0] hsamp;
+    reg signed [7:0] vlsamp;
+    reg signed [7:0] vrsamp;
+    reg signed [7:0] husamp;
+    reg signed [7:0] hdsamp;
+    reg signed [7:0] ddlsamp;
+    reg signed [7:0] ddrsamp;
     
     integer i;
     integer j;

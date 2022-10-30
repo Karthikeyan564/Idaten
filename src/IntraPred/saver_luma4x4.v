@@ -18,13 +18,13 @@ module saver_luma4x4 #(
     input [12:0] mbnumber,
     output reg [2:0] mode);
 
-    integer i, j;
+    reg [4:0] i, j;
     
     reg [2:0] min;
     reg [7:0] residues [LENGTH*WIDTH-1:0];
     reg [2:0] modes [4096:0];
-    reg [7:0] row;
-    reg [7:0] col;
+    reg [12:0] row;
+    reg [12:0] col;
 
     reg [7:0] res [15:0];
 
@@ -36,7 +36,7 @@ module saver_luma4x4 #(
             
             for (i = 1; i < 8; i = i + 1) begin
             
-                if (sads[i] < sads[min]) min = i;
+                if (sads[3'(i)] < sads[3'(min)]) min = 3'(i);
 
             end 
             
@@ -62,7 +62,7 @@ module saver_luma4x4 #(
 
             for (i = 0; i < 4; i = i +1) begin
                 for (j = 0; j < 4; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j];
+                    residues[(256*(row+13'(i)))+(col+13'(j))] = res[(i*4)+j];
                 end
             end
 

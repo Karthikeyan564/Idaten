@@ -14,7 +14,7 @@ module moder_chroma8x8(
     reg [12:0] sum = 0;
     
     always @(posedge clk) begin
-        sum = 12'b000000000000;
+        sum = 13'b000000000000;
         if (enable == 1) begin 
         
             //vertical
@@ -31,17 +31,17 @@ module moder_chroma8x8(
              
              //dc
              for(i=0;i<8;i=i+1) begin
-                sum = sum + toppixels[i];
+                sum = sum + 13'(toppixels[i]);
              end
             
              for(i=0;i<8;i=i+1) begin
-                sum = sum + leftpixels[i];
+                sum = sum + 13'(leftpixels[i]);
              end
              
              sum = sum >> 5;
              
              for(i=0; i<64; i = i+1) begin
-                dcpred[i] = sum;
+                dcpred[i] = 8'(sum);
              end
              
        end

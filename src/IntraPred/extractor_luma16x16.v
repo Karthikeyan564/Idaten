@@ -6,7 +6,7 @@ module extractor_luma16x16 #(
     input clk,
     input reset,
     input enable,
-    input mbnumber,
+    input [12:0] mbnumber,
     output reg [7:0] mb [255:0],
     output reg [7:0] toppixels [15:0],
     output reg [7:0] leftpixels [15:0]);
@@ -18,9 +18,8 @@ module extractor_luma16x16 #(
 		$readmemh("output.mem", image);
 	end
 
-    integer row;
-	integer col;
-	integer i,j,k;
+    reg [15:0] row, col;
+	reg [7:0] i,j,k;
 
     always @ (posedge clk) begin
 
@@ -28,24 +27,24 @@ module extractor_luma16x16 #(
 
             mb <= mbintermediate;
 
-            row <= (mbnumber >> 4) << 4;
-            col <= ((mbnumber & 15) - 1) << 4;
+            row <= (16'(mbnumber) >> 4) << 4;
+            col <= ((16'(mbnumber) & 15) - 1) << 4;
 
             // Fetch mb
             for (j = 0; j < 16; j = j + 1) begin
                 for (k = 0; k < 16; k = k +1) begin
-                    mbintermediate[(j<<4) + k] = image[((row+j)<<8) + (col+k)];
+                    mbintermediate[(j<<4) + k] = image[((row+16'(j))<<8) + (col+16'(k))];
                 end
             end
             
             // Fetch toppixels
             for (j = 0; j < 16; j = j + 1) begin
-                toppixels[j] = (row == 0 ? 128 : (image[((row-1)<<8) + (col+j)])); // should not come from the image, should come from the pred_frame.
+                toppixels[4'(j)] = (row == 0 ? 128 : (image[((row-1)<<8) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
             end
 
             // Fetch leftpixels
             for (i = 0; i < 16; i = i +1) begin
-                leftpixels[i] = ((col == 0) ? 128 : (image[((row+i)<<8) + (col-1)])); // same.
+                leftpixels[4'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))<<8) + (col-1)])); // same.
             end
             
         end

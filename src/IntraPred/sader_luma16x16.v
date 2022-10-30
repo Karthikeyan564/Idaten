@@ -9,9 +9,9 @@ module sader_luma16x16 (
 	input [7:0] dcres [255:0],
     output reg [7:0] sads [2:0]);
 
-    reg [7:0] vsamp16;
-    reg [7:0] hsamp16;
-    reg [7:0] dcsamp16;
+    reg signed [7:0] vsamp16;
+    reg signed [7:0] hsamp16;
+    reg signed [7:0] dcsamp16;
     
     integer i;
     integer j;

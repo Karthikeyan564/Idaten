@@ -10,16 +10,16 @@ module saver_luma16x16 #(
     input [7:0] vres [255:0],
 	input [7:0] hres [255:0],
     input [7:0] dcres [255:0],
-    input [8:0] mbnumber,
+    input [12:0] mbnumber,
     output reg [2:0] mode);
 
-    integer i, j;
+    reg [4:0] i, j;
     
     reg [2:0] min;
     reg [7:0] residues [LENGTH*WIDTH-1:0];
     reg [2:0] modes [256:0];
-    reg [7:0] row;
-    reg [7:0] col;
+    reg [12:0] row;
+    reg [12:0] col;
 
     reg [7:0] res [255:0];
 
@@ -29,16 +29,16 @@ module saver_luma16x16 #(
 
             min = 0;
             
-            for (i = 1; i < 3; i = i + 1) begin
+            for (i = 1; i < 8; i = i + 1) begin
             
-                if (sads[i] < sads[min]) min = i;
+                if (sads[2'(i)] < sads[2'(min)]) min = 3'(i);
 
             end 
             
             row <= (mbnumber >> 4) << 4;
             col <= ((mbnumber & 15) - 1) << 4;
 
-            modes[mbnumber] = min;
+            modes[9'(mbnumber)] = min;
             mode = min;
 
             case (min)
@@ -52,7 +52,7 @@ module saver_luma16x16 #(
 
             for (i = 0; i < 16; i = i +1) begin
                 for (j = 0; j < 16; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*16)+j]; //is this right??
+                    residues[(256*(row+13'(i)))+(col+13'(j))] = res[(i*16)+j]; //is this right??
                 end
             end
 
