@@ -1,25 +1,4 @@
-
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 30.10.2022 01:59:27
-// Design Name: 
-// Module Name: saver_chroma8x8
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
+`timescale 1ns/1ps
 
 module saver_chroma8x8 #(
     parameter LENGTH = 256,
@@ -42,7 +21,7 @@ module saver_chroma8x8 #(
     reg [7:0] row;
     reg [7:0] col;
 
-    reg [3:0] res [63:0];
+    reg [7:0] res [63:0];
 
     always @(posedge clk) begin
         
@@ -56,8 +35,8 @@ module saver_chroma8x8 #(
 
             end 
             
-            row <= (mbnumber >> 4) << 4; //math??
-            col <= ((mbnumber & 15) - 1) << 4; //math?
+            row <= (mbnumber >> 5) << 3;
+            col <= ((mbnumber & 31) - 1) << 3;
 
             modes[mbnumber] = min;
             mode = min;
@@ -71,9 +50,9 @@ module saver_chroma8x8 #(
 
 			endcase
 
-            for (i = 0; i < 4; i = i +1) begin
-                for (j = 0; j < 4; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j]; //math??
+            for (i = 0; i < 8; i = i +1) begin
+                for (j = 0; j < 8; j = j + 1) begin
+                    residues[(256*(row+i))+(col+j)] = res[(i*8)+j]; 
                 end
             end
 

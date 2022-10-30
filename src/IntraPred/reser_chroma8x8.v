@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module res_chroma8x8(
+module reser_chroma8x8(
     input clk,
     input reset, 
     input enable,
@@ -47,4 +47,5 @@ module res_chroma8x8(
         end
           
     end
+    
 endmodule

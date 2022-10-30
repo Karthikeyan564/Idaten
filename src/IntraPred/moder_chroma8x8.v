@@ -1,27 +1,7 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 30.10.2022 00:38:36
-// Design Name: 
-// Module Name: moder_chroma8x8
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module moder_chroma8x8(
-        input clk,
+    input clk,
     input reset,
     input enable,
     input [7:0] toppixels [7:0],

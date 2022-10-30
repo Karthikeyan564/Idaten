@@ -50,9 +50,9 @@ module saver_luma16x16 #(
 
 			endcase
 
-            for (i = 0; i < 4; i = i +1) begin
-                for (j = 0; j < 4; j = j + 1) begin
-                    residues[(256*(row+i))+(col+j)] = res[(i*4)+j]; //is this right??
+            for (i = 0; i < 16; i = i +1) begin
+                for (j = 0; j < 16; j = j + 1) begin
+                    residues[(256*(row+i))+(col+j)] = res[(i*16)+j]; //is this right??
                 end
             end
 

@@ -172,8 +172,27 @@ module intrapred (
         .dcpred(dcpred_luma16x16));
         
     // ChromaB 8x8
+    moder_chroma8x8 umoder_chromab8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .toppixels(toppixels_chromab8x8),
+        .leftpixels(leftpixels_chromab8x8),
+        .vpred(vpred_chromab8x8),
+        .hpred(hpred_chromab8x8),
+        .dcpred(dcpred_chromab8x8));
+        
     // ChromaR 8x8
-      
+    moder_chroma8x8 umoder_chromar8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .toppixels(toppixels_chromar8x8),
+        .leftpixels(leftpixels_chromar8x8),
+        .vpred(vpred_chromar8x8),
+        .hpred(hpred_chromar8x8),
+        .dcpred(dcpred_chromar8x8));
+        
 	// Compute Residual
 	// Luma 4x4
 	reser_luma4x4 ureser_luma4x4 (
@@ -212,7 +231,30 @@ module intrapred (
 		.dcres(dcres_luma16x16));
 		
     // ChromaB 8x8
+    reser_chroma8x8 ureser_chromab8x8 (
+        .clk(clk),
+		.reset(reset),
+		.enable(enable),
+		.mb(mb_chromab8x8),
+		.vpred(vpred_chromab8x8),
+		.hpred(hpred_chromab8x8),
+		.dcpred(dcres_chromab8x8),
+		.vres(vres_chromab8x8),
+		.hres(hres_chromab8x8),
+		.dcres(dcres_chromab8x8));
+		
     // ChromaR 8x8
+    reser_chroma8x8 ureser_chromar8x8 (
+        .clk(clk),
+		.reset(reset),
+		.enable(enable),
+		.mb(mb_chromar8x8),
+		.vpred(vpred_chromar8x8),
+		.hpred(hpred_chromar8x8),
+		.dcpred(dcres_chromar8x8),
+		.vres(vres_chromar8x8),
+		.hres(hres_chromar8x8),
+		.dcres(dcres_chromar8x8));
     
 	// Compute SAD
 	// Luma 4x4
@@ -241,7 +283,24 @@ module intrapred (
 		.sads(sads_luma16x16));
 		
 	// ChromaB 8x8
+	sader_chroma8x8 usader_chromab8x8 (
+	   .clk(clk),
+       .reset(reset),
+       .enable(enable),
+       .vres(vres_chromab8x8),
+       .hres(hres_chromab8x8),
+       .dcres(dcres_chromab8x8),
+       .sads(sads_chromab8x8));
+       
 	// ChromaR 8x8
+	sader_chroma8x8 usader_chromar8x8 (
+	   .clk(clk),
+       .reset(reset),
+       .enable(enable),
+       .vres(vres_chromar8x8),
+       .hres(hres_chromar8x8),
+       .dcres(dcres_chromar8x8),
+       .sads(sads_chromar8x8));
 		
 	// Make decision and store residual
 	// Luma 4x4
@@ -274,6 +333,27 @@ module intrapred (
 		.mode(mode_luma16x16));
 		
 	// ChromaB 8x8
+	saver_chroma8x8 usaver_chromab8x8 (
+	   .clk(clk),
+	   .reset(reset),
+	   .enable(enable),
+	   .sads(sads_chromab8x8),
+	   .vres(vres_chromab8x8),
+	   .hres(hres_chromab8x8),
+	   .dcres(dcres_chromab8x8),
+	   .mbnumber(mbnumber),
+	   .mode(mode_chromab8x8));
+	   
 	// ChromaR 8x8
+	saver_chroma8x8 usaver_chromar8x8 (
+	   .clk(clk),
+	   .reset(reset),
+	   .enable(enable),
+	   .sads(sads_chromar8x8),
+	   .vres(vres_chromar8x8),
+	   .hres(hres_chromar8x8),
+	   .dcres(dcres_chromar8x8),
+	   .mbnumber(mbnumber),
+	   .mode(mode_chromar8x8));
 	
 endmodule
