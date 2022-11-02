@@ -86,9 +86,11 @@ wire [1:0] sel;
 
 genvar i;
 generate
-    for (i=0; i<15; i++) begin
+    for (i=0; i<16; i++) begin
     transreg dut1 (.up(up[i]), .down(down[i]), .left(left[i]), .right(right[i]), .sel(sel), .out1(left[i]));
     end
 endgenerate
+
+
     
 endmodule
