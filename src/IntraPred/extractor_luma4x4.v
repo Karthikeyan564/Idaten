@@ -39,7 +39,7 @@ module extractor_luma4x4 #(
             
             // Fetch toppixels
             for (j = 0; j < 8; j = j + 1) begin
-                toppixels[3'(j)] = (row == 0 ? 128 : (image[((row-1)*256) + (col+13'(j))])); // should not come from the image, should come from the pred_frame.
+                toppixels[j] = (row == 0 ? 128 : (image[((row-1)*256) + (col+13'(j))])); // should not come from the image, should come from the pred_frame.
             end
 
             // Fetch leftpixels
