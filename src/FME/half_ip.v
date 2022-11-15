@@ -22,7 +22,14 @@
 /* int_pix_ind - address of the centre integer pixel
  half - interpolated value*/
  
-module counter(cnt,clk,rst,en);
+module half_ip_pre(input [7:0] int_pix_ind);
+ 
+ 
+ 
+ 
+endmodule
+ 
+/*module counter(cnt,clk,rst,en);
 input clk,rst,en;
 output [2:0]cnt;
 
@@ -44,6 +51,7 @@ begin
 end
 
 endmodule 
+
  
 
 module half_ip(input clk, rst, input [7:0] int_pix_ind, input [3:0] cand, output reg [47:0] pixels);
@@ -53,7 +61,7 @@ reg [47:0] pixels_int;
 reg [7:0] half_int [11:0];
 reg [7:0] temp_address;
 wire [2:0] i;
-wire en;
+reg en;
 
 initial begin
     $readmemh("mbvalues_ref.mem" ,lut); 
@@ -121,6 +129,9 @@ case (cand)
                pixels [39:32] <= lut [int_pix_ind +1];
                pixels [47:40] <= lut [int_pix_ind +2];
                end  
+default : begin 
 
 endcase
 endmodule
+*/
+
