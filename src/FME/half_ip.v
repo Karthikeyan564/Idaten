@@ -22,9 +22,39 @@
 /* int_pix_ind - address of the centre integer pixel
  half - interpolated value*/
  
-module half_ip_pre(input [7:0] int_pix_ind);
+module half_ip_pre(input clk, input [7:0] int_pix_ind);
  
- 
+reg [7:0] lut [255:0];
+wire [47:0] pixels_int ;
+reg [7:0] temp_address;
+reg [7:0] temp_address_1;
+wire [7:0] half_int;
+
+initial begin
+    $readmemh("mbvalues_ref.mem" ,lut); 
+end
+
+
+six_tf dut1 (.clk(clk), .a(pixels_int[7:0]), .b(pixels_int[15:8]), .c(pixels_int[23:16]), .d(pixels_int[31:24]), .e(pixels_int[39:32]), .f(pixels_int[47:40]), .half(half_int));    
+
+assign pixels_int[7:0] = lut[temp_address - 2];
+assign pixels_int[15:8] = lut[temp_address - 1];
+assign pixels_int[23:16] = lut[temp_address];
+assign pixels_int[31:24] = lut[temp_address + 1];
+assign pixels_int[39:32] = lut[temp_address + 2];
+assign pixels_int[47:40] = lut[temp_address + 3];
+
+always @ temp_address
+begin
+
+end
+
+
+
+
+
+
+
  
  
 endmodule
