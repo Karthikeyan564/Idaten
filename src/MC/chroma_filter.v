@@ -19,7 +19,7 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module MA(input [2:0] xfrac, yfrac, input [7:0] A, B, C, D, output reg [16:0] half_chrome);
+module chroma_filter(input [2:0] xfrac, yfrac, input [7:0] A, B, C, D, output reg [16:0] half_chrome);
 
 wire [2:0] temp1, temp2;
 wire [13:0] temp3, temp4, temp5, temp6;
