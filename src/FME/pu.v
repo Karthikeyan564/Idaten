@@ -75,21 +75,17 @@ end
 
 endmodule
 
-module pu(input DE, input [8:0] rc1, rc2, rc3, rc4, output reg [15:0] distort);
+module pu(input [1:0] sel, input [8:0] rc1, rc2, rc3, rc4, output reg [15:0] i1d3);
 
 
 wire [11:0] op1, op2, op3, op4;
 reg [11:0] rc11, rc12, rc13, rc14;
 wire [14:0] op11, op21, op31, op41;
 wire [15:0][11:0] up, down, left, right;
-reg [1:0] sel;
-
-wire [15:0] i1d1, i1d2, i1d3;
-
-
+reg  [15:0] i1d1, i1d2;
 
 oneDtrans1 duta (.rc1(rc1),.rc2(rc2),.rc3(rc3),.rc4(rc4),.op1(op1),.op2(op2),.op3(op3),.op4(op4));
-oneDtrans2 dutb (.rc1(rc11),.rc2(rc21),.rc3(rc31),.rc4(rc41),.op1(op11),.op2(op21),.op3(op31),.op4(op41));
+oneDtrans2 dutb (.rc1(rc11),.rc2(rc12),.rc3(rc13),.rc4(rc14),.op1(op11),.op2(op21),.op3(op31),.op4(op41));
 
 genvar i;
 integer j,k;
@@ -138,37 +134,28 @@ assign rc12 = left[7];
 assign rc13 = left[11];
 assign rc14 = left[15];
 
-assign i1d1 = op11 + op21;
-assign i1d2 = op31 + op41;
-assign i1d3 = i1d1 + i1d2;
-
-always @ *
-begin
-
-if (DE)
-begin
-
-sel <= 2'b01;
-sel <= 2'b10;
-
-distort <= distort + i1d3;
-
-end
-else 
+always @ op11
 begin 
 
-sel <= 2'b00;
-end 
+i1d1 <= op11 + op21;
+i1d2 <= op31 + op41;
+i1d3 <= i1d1 + i1d2;
+
 end
 
 endmodule
 
 
-module input_fsm(input clk, input rst, input [15:0][7:0] ref_pix, cur_pix, output reg [2:0] state, output reg DE);
+module main_fsm(input clk, input rst, input [15:0][7:0] ref_pix, cur_pix, output reg [3:0] state, output reg on, output reg [15:0] distort);
 
-parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4, S5 = 5;
+parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4, S5 = 5, S6 = 6, S7 = 7, S8 = 8, S9 = 9;
 reg [8:0] rc1, rc2, rc3, rc4;
+reg [1:0] sel;
+reg [15:0] trans_out;
 
+pu dutx (.sel(sel), .rc1(rc1), .rc2(rc2), .rc3(rc3), .rc4(rc4), .i1d3(trans_out));
+
+assign on = state ? 1'b1 : 1'b0;
 
 always @ (posedge clk or negedge rst)
 begin
@@ -176,7 +163,7 @@ if (!rst)
 state <= S0;
 else begin
 case(state)
-S0: begin state<= S1; DE<=1; end
+S0: begin state<= S1; sel <= 2'b01; end
 S1: begin state <= S2; rc1 <= (ref_pix[0] - cur_pix[0]) >= 0 ? ref_pix[0] - cur_pix[0] : cur_pix[0] - ref_pix[0];
                        rc2 <= (ref_pix[1] - cur_pix[1]) >= 0 ? ref_pix[1] - cur_pix[1] : cur_pix[1] - ref_pix[1];
                        rc3 <= (ref_pix[2] - cur_pix[2]) >= 0 ? ref_pix[2] - cur_pix[2] : cur_pix[2] - ref_pix[2];
@@ -198,7 +185,12 @@ S4: begin state <= S5; rc1 <= (ref_pix[12] - cur_pix[12]) >= 0 ? ref_pix[12] - c
                        rc4 <= (ref_pix[15] - cur_pix[15]) >= 0 ? ref_pix[15] - cur_pix[15] : cur_pix[15] - ref_pix[15]; 
           
     end
-S5: begin state <= S0; DE<=0; end
+S5: begin state <= S6; sel <= 2'b10; distort <= distort+trans_out; end
+S6: begin state <= S7; distort <= distort+trans_out; end
+S7: begin state <= S8; distort <= distort+trans_out; end
+S8: begin state <= S9; distort <= distort+trans_out; end
+S9: begin state <= S9; sel <= 2'b00; end
+
 endcase
 end
 end
