@@ -74,12 +74,10 @@ endcase
 end
 
 endmodule
- 
 
-module pu(input DE, input [15:0][7:0] ref_pix, cur_pix, output reg [15:0] distort);
+module pu(input DE, input [8:0] rc1, rc2, rc3, rc4, output reg [15:0] distort);
 
 
-reg [8:0] rc1, rc2, rc3, rc4;
 wire [11:0] op1, op2, op3, op4;
 reg [11:0] rc11, rc12, rc13, rc14;
 wire [14:0] op11, op21, op31, op41;
@@ -151,25 +149,11 @@ if (DE)
 begin
 
 sel <= 2'b01;
-
-for (j=0;j<4;j++)
-begin
-rc1 <= (ref_pix[j] - cur_pix[j]) >= 0 ? ref_pix[j] - cur_pix[j] : cur_pix[j] - ref_pix[j];
-rc2 <= (ref_pix[j+1] - cur_pix[j+1]) >= 0 ? ref_pix[j+1] - cur_pix[j+1] : cur_pix[j+1] - ref_pix[j+1];
-rc3 <= (ref_pix[j+2] - cur_pix[j+2]) >= 0 ? ref_pix[j+2] - cur_pix[j+2] : cur_pix[j+2] - ref_pix[j+2];
-rc4 <= (ref_pix[j+3] - cur_pix[j+3]) >= 0 ? ref_pix[j+3] - cur_pix[j+3] : cur_pix[j+3] - ref_pix[j+3];
-end
-
 sel <= 2'b10;
-
-for (k=0;k<4;k++)
-begin
 
 distort <= distort + i1d3;
 
 end
-end
-
 else 
 begin 
 
@@ -178,3 +162,48 @@ end
 end
 
 endmodule
+
+
+module input_fsm(input clk, input rst, input [15:0][7:0] ref_pix, cur_pix, output reg [2:0] state, output reg DE);
+
+parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4, S5 = 5;
+reg [8:0] rc1, rc2, rc3, rc4;
+
+
+always @ (posedge clk or negedge rst)
+begin
+if (!rst)
+state <= S0;
+else begin
+case(state)
+S0: begin state<= S1; DE<=1; end
+S1: begin state <= S2; rc1 <= (ref_pix[0] - cur_pix[0]) >= 0 ? ref_pix[0] - cur_pix[0] : cur_pix[0] - ref_pix[0];
+                       rc2 <= (ref_pix[1] - cur_pix[1]) >= 0 ? ref_pix[1] - cur_pix[1] : cur_pix[1] - ref_pix[1];
+                       rc3 <= (ref_pix[2] - cur_pix[2]) >= 0 ? ref_pix[2] - cur_pix[2] : cur_pix[2] - ref_pix[2];
+                       rc4 <= (ref_pix[3] - cur_pix[3]) >= 0 ? ref_pix[3] - cur_pix[3] : cur_pix[3] - ref_pix[3]; 
+    end
+S2: begin state <= S3; rc1 <= (ref_pix[4] - cur_pix[4]) >= 0 ? ref_pix[4] - cur_pix[4] : cur_pix[4] - ref_pix[4];
+                       rc2 <= (ref_pix[5] - cur_pix[5]) >= 0 ? ref_pix[5] - cur_pix[5] : cur_pix[5] - ref_pix[5];
+                       rc3 <= (ref_pix[6] - cur_pix[6]) >= 0 ? ref_pix[6] - cur_pix[6] : cur_pix[6] - ref_pix[6];
+                       rc4 <= (ref_pix[7] - cur_pix[7]) >= 0 ? ref_pix[7] - cur_pix[7] : cur_pix[7] - ref_pix[7]; 
+    end
+S3: begin state <= S4; rc1 <= (ref_pix[8] - cur_pix[8]) >= 0 ? ref_pix[8] - cur_pix[8] : cur_pix[8] - ref_pix[8];
+                       rc2 <= (ref_pix[9] - cur_pix[9]) >= 0 ? ref_pix[9] - cur_pix[9] : cur_pix[9] - ref_pix[9];
+                       rc3 <= (ref_pix[10] - cur_pix[10]) >= 0 ? ref_pix[10] - cur_pix[10] : cur_pix[10] - ref_pix[10];
+                       rc4 <= (ref_pix[11] - cur_pix[11]) >= 0 ? ref_pix[11] - cur_pix[11] : cur_pix[11] - ref_pix[11]; 
+    end
+S4: begin state <= S5; rc1 <= (ref_pix[12] - cur_pix[12]) >= 0 ? ref_pix[12] - cur_pix[12] : cur_pix[12] - ref_pix[12];
+                       rc2 <= (ref_pix[13] - cur_pix[13]) >= 0 ? ref_pix[13] - cur_pix[13] : cur_pix[13] - ref_pix[13];
+                       rc3 <= (ref_pix[14] - cur_pix[14]) >= 0 ? ref_pix[14] - cur_pix[14] : cur_pix[14] - ref_pix[14];
+                       rc4 <= (ref_pix[15] - cur_pix[15]) >= 0 ? ref_pix[15] - cur_pix[15] : cur_pix[15] - ref_pix[15]; 
+          
+    end
+S5: begin state <= S0; DE<=0; end
+endcase
+end
+end
+
+
+endmodule
+ 
+
