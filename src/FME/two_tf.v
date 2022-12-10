@@ -23,6 +23,6 @@
 module two_tf(input clk, input [7:0] x, y, output reg [7:0] quat);
 
 always @ (posedge clk)
- quat<= (x+y+1) >> 1;
+ quat <= (x+y+1) >> 1;
 
 endmodule
