@@ -7,12 +7,13 @@ module transformcoder #(
     input clk,
     input enable,
     input reset,
-    input [BIT_LENGTH:0] residuals [15:0]);
+    input [BIT_LENGTH:0] residuals [15:0],
+    output reg [BIT_LENGTH:0] processedres [15:0]);
     
     wire [BIT_LENGTH:0] res2tran [15:0];
     wire [BIT_LENGTH:0] tran2quant [15:0];
     wire [BIT_LENGTH:0] quant2tran [15:0];
-    wire [BIT_LENGTH:0] tran2res [15:0];
+    wire [BIT_LENGTH:0] tran2res [15:0] = processedres;
     
     tran_4x4 #(.BIT_LENGTH(BIT_LENGTH)) utran_4x4 (
         .clk(clk),

@@ -10,7 +10,7 @@ module invquant_4x4 #(
     input [BIT_LENGTH : 0] quantized [15:0],
     output reg [BIT_LENGTH : 0] transformed [15:0]);
     
-    reg [3:0] i;
+    reg [4:0] i;
     reg [4:0] multfactor;
     
     always @ (posedge clk) begin
