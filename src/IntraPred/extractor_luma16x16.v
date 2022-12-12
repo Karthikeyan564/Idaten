@@ -1,34 +1,60 @@
 `timescale 1ns/1ps
 
 module extractor_luma16x16 #(
-    parameter LENGTH = 256,
-    parameter WIDTH = 256 )(
+    parameter BIT_LENGTH = 15,
+    parameter LENGTH = 1280,
+    parameter WIDTH = 720,
+    parameter MB_SIZE_L = 16,
+    parameter MB_SIZE_W = 16)(
     input clk,
     input reset,
     input enable,
     input [12:0] mbnumber,
-    output reg [7:0] mb [255:0],
-    output reg [7:0] toppixels [15:0],
-    output reg [7:0] leftpixels [15:0]);
+    output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0],
+    output reg [7:0] toppixels [MB_SIZE_W-1:0],
+    output reg [7:0] leftpixels [MB_SIZE_L-1:0]);
     
-    reg [7:0] image [LENGTH*WIDTH - 1 : 0];
-    reg [7:0] mbintermediate [255:0];
+    reg [7:0] image [LENGTH*WIDTH-1 : 0];
+    reg [7:0] mbintermediate [MB_SIZE_L*MB_SIZE_W-1:0];
 
     initial begin
 		$readmemh("output.mem", image);
 	end
 
     reg [15:0] row, col;
-	reg [7:0] i,j,k;
-
+	reg [7:0] i, j, k;
+	
+	reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
+	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
+	wire [BIT_LENGTH:0] rowShift, colShift;
+	
+	case (MB_SIZE_L) 
+	
+	       5'b10000:   assign rowShift = 4;
+	       5'b01000:   assign rowShift = 3;
+	       5'b00100:   assign rowShift = 2;
+	       default:    assign rowShift = 4;
+	       
+	endcase
+	
+	case (MB_SIZE_W) 
+	
+	       5'b10000:   assign colShift = 4;
+	       5'b01000:   assign colShift = 3;
+	       5'b00100:   assign colShift = 2;
+	       default:    assign colShift = 4;
+	       
+	endcase
+	
+    
     always @ (posedge clk) begin
 
 		if (enable) begin
 
             mb <= mbintermediate;
 
-            row <= (16'(mbnumber) >> 4) << 4;
-            col <= ((16'(mbnumber) & 15) - 1) << 4;
+            row <= (mbnumber%K1) << rowShift;
+            col <= (mbnumber%K2) << colShift;
 
             // Fetch mb
             for (j = 0; j < 16; j = j + 1) begin
