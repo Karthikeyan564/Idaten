@@ -1,10 +1,11 @@
 `timescale 1ns/1ps
 
-module intrapred (
+module intrapred #(
+    parameter MB_NUMBER_BITS = 12)(
 	input clk,
 	input reset,
 	input enable,
-	input [12:0] mbnumber);
+	input [MB_NUMBER_BITS:0] mbnumber);
     
 	// inputs
 	wire [7:0] mb_luma4x4 [15:0];
@@ -93,14 +94,23 @@ module intrapred (
 		
 	// Retrieve macroblock and neighbouring pixels		
 	// Luma 4x4
-	extractor_luma4x4 uextractor_luma4x4 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enable),
-		.mbnumber(mbnumber),
-		.mb(mb_luma4x4),
-		.toppixels(toppixels_luma4x4),
-		.leftpixels(leftpixels_luma4x4));
+	extractor #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_luma4x4 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mbnumber(mbnumber),
+        .mb(mb_luma4x4),
+        .toppixels(toppixels_luma4x4),
+        .leftpixels(leftpixels_luma4x4));
+	
+//	extractor_luma4x4 uextractor_luma4x4 (
+//		.clk(clk),
+//		.reset(reset),
+//		.enable(enable),
+//		.mbnumber(mbnumber),
+//		.mb(mb_luma4x4),
+//		.toppixels(toppixels_luma4x4),
+//		.leftpixels(leftpixels_luma4x4));
 		
 	// Luma 16x16
 	extractor_luma16x16 uextractor_luma16x16 (

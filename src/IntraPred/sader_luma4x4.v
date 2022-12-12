@@ -27,8 +27,6 @@ module sader_luma4x4 (
     integer j;
 
     always @(posedge clk) begin
-        
-        
 
         if (enable) begin
 

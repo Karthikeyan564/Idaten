@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module extractor_luma16x16 #(
+module extractor #(
     parameter BIT_LENGTH = 15,
     parameter LENGTH = 1280,
     parameter WIDTH = 720,
@@ -65,12 +65,12 @@ module extractor_luma16x16 #(
             
             // Fetch toppixels
             for (j = 0; j < MB_SIZE_W; j = j + 1) begin
-                toppixels[5'(j)] = (row == 0 ? 128 : (image[((row-1)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
+                toppixels[5'(j)] = (row == 0 ? 128 : (image[((row)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
             end
 
             // Fetch leftpixels
             for (i = 0; i < MB_SIZE_L; i = i +1) begin
-                leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col-1)])); // same.
+                leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col)])); // same.
             end
             
         end

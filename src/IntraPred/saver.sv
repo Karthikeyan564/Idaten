@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module saver_luma16x16 #(
+module saver #(
     parameter BIT_LENGTH = 15,
     parameter LENGTH = 1280,
     parameter WIDTH = 720,
