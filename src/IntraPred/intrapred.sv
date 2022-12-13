@@ -18,7 +18,7 @@ module intrapred #(
 	wire [7:0] toppixels_chromab8x8 [7:0];
 	wire [7:0] toppixels_chromar8x8 [7:0];
 	
-	wire [7:0] leftpixels_luma4x4 [4:0];
+	wire [7:0] leftpixels_luma4x4 [3:0];
 	wire [7:0] leftpixels_luma16x16 [15:0];
 	wire [7:0] leftpixels_chromab8x8 [7:0];
 	wire [7:0] leftpixels_chromar8x8 [7:0];

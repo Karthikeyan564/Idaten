@@ -8,6 +8,7 @@ module transformcoder #(
     input enable,
     input reset,
     input [BIT_LENGTH:0] residuals [15:0],
+    input [5:0] QP,
     output reg [BIT_LENGTH:0] processedres [15:0]);
     
     wire [BIT_LENGTH:0] res2tran [15:0];
@@ -28,7 +29,8 @@ module transformcoder #(
         .reset(reset),
         .mode(mode),
         .transformed(res2tran),
-        .quantized(tran2quant));
+        .quantized(tran2quant),
+        .QP(QP));
         
     invquant_4x4 #(.BIT_LENGTH(BIT_LENGTH), .QP_BY_6(QP_BY_6), .QP_MOD_6(QP_MOD_6)) uinvquant_4x4 (
         .clk(clk),

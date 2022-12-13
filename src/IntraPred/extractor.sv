@@ -11,7 +11,7 @@ module extractor #(
     input enable,
     input [12:0] mbnumber,
     output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0],
-    output reg [7:0] toppixels [MB_SIZE_W-1:0],
+    output reg [7:0] toppixels [2*MB_SIZE_W-1:0],
     output reg [7:0] leftpixels [MB_SIZE_L-1:0]);
     
     reg [7:0] image [LENGTH*WIDTH-1 : 0];
