@@ -1,13 +1,13 @@
 `timescale 1ns / 1ps
 
 module invquant_4x4 #(
-    parameter BIT_LENGTH = 15,
-    parameter QP_BY_6 = 3,
-    parameter QP_MOD_6 = 3)(
+    parameter BIT_LENGTH = 15)(
     input clk,
     input enable,
     input reset,
     input [BIT_LENGTH : 0] quantized [15:0],
+    input [3:0] QP_BY_6,
+    input [2:0] QP_MOD_6,
     output reg [BIT_LENGTH : 0] transformed [15:0]);
     
     reg [4:0] i;
