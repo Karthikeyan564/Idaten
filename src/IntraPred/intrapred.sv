@@ -113,7 +113,7 @@ module intrapred #(
 //		.leftpixels(leftpixels_luma4x4));
 		
 	// Luma 16x16
-	extractor_luma16x16 uextractor_luma16x16 (
+	extractor #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_luma16x16 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enable),
@@ -121,9 +121,18 @@ module intrapred #(
 		.mb(mb_luma16x16),
 		.toppixels(toppixels_luma16x16),
 		.leftpixels(leftpixels_luma16x16));
+	
+//	extractor_luma16x16 uextractor_luma16x16 (
+//		.clk(clk),
+//		.reset(reset),
+//		.enable(enable),
+//		.mbnumber(mbnumber),
+//		.mb(mb_luma16x16),
+//		.toppixels(toppixels_luma16x16),
+//		.leftpixels(leftpixels_luma16x16));
 
     // ChromaB 8x8
-    extractor_chroma8x8 uextractor_chromab8x8 (
+    extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enable),
@@ -131,9 +140,18 @@ module intrapred #(
         .mb(mb_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
+    
+//    extractor_chroma8x8 uextractor_chromab8x8 (
+//        .clk(clk),
+//        .reset(reset),
+//        .enable(enable),
+//        .mbnumber(mbnumber),
+//        .mb(mb_chromab8x8),
+//        .toppixels(toppixels_chromab8x8),
+//        .leftpixels(leftpixels_chromab8x8));
         
     // ChromaR 8x8
-    extractor_chroma8x8 uextractor_chromar8x8 (
+    extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromar8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enable),
@@ -141,6 +159,15 @@ module intrapred #(
         .mb(mb_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
+    
+//    extractor_chroma8x8 uextractor_chromar8x8 (
+//        .clk(clk),
+//        .reset(reset),
+//        .enable(enable),
+//        .mbnumber(mbnumber),
+//        .mb(mb_chromar8x8),
+//        .toppixels(toppixels_chromar8x8),
+//        .leftpixels(leftpixels_chromar8x8));
 
 	// Compute 8 modes
 	// Luma 4x4
