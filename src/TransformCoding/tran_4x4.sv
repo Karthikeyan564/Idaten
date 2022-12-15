@@ -33,10 +33,10 @@ module tran_4x4 #(
             intermediate[11] = residuals[3] - residuals[7] - residuals[11] - residuals[15];
             
        // Row 4
-            intermediate[0] = residuals[0] - residuals[4]<<1 + residuals[8]<<1 - residuals[12];
-            intermediate[1] = residuals[1] - residuals[5]<<1 + residuals[9]<<1 - residuals[13];
-            intermediate[2] = residuals[2] - residuals[6]<<1 + residuals[10]<<1 - residuals[14];
-            intermediate[3] = residuals[3] - residuals[7]<<1 + residuals[11]<<1 - residuals[15];
+            intermediate[12] = residuals[0] - residuals[4]<<1 + residuals[8]<<1 - residuals[12];
+            intermediate[13] = residuals[1] - residuals[5]<<1 + residuals[9]<<1 - residuals[13];
+            intermediate[14] = residuals[2] - residuals[6]<<1 + residuals[10]<<1 - residuals[14];
+            intermediate[15] = residuals[3] - residuals[7]<<1 + residuals[11]<<1 - residuals[15];
             
        // Stage 2
        // Row 1

@@ -29,21 +29,19 @@ module extractor #(
 	wire [BIT_LENGTH:0] rowShift, colShift;
 	
 	case (MB_SIZE_L) 
-	
-	       5'b10000:   assign rowShift = 4;
-	       5'b01000:   assign rowShift = 3;
-	       5'b00100:   assign rowShift = 2;
+	       5'd16:      assign rowShift = 4;
+	       5'd8:       assign rowShift = 3;
+	       5'd4:       assign rowShift = 2;
+	       5'd2:       assign rowShift = 1;
 	       default:    assign rowShift = 4;
-	       
 	endcase
 	
 	case (MB_SIZE_W) 
-	
-	       5'b10000:   assign colShift = 4;
-	       5'b01000:   assign colShift = 3;
-	       5'b00100:   assign colShift = 2;
-	       default:    assign colShift = 4;
-	       
+	       5'd16:      assign rowShift = 4;
+	       5'd8:       assign rowShift = 3;
+	       5'd4:       assign rowShift = 2;
+	       5'd2:       assign rowShift = 1;
+	       default:    assign rowShift = 4;
 	endcase
 	
     

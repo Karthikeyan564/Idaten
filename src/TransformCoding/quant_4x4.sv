@@ -15,13 +15,12 @@ module quant_4x4 #(
     
     reg [4:0] i;
     reg [13:0] multfactor;
-    reg [5:0] QBITS;
     
     always @ (posedge clk) begin
         
         for (i = 0; i < 16; i = i+1) begin
-        
-            if (i == 0 || i == 2 || i == 8 || i == 10) 
+            
+            if (i == 5'd0 || i == 5'd2 || i == 5'd8 || i == 5'd10) 
                 case (QP_MOD_6)
                     3'b000: multfactor <= 13107;
                     3'b001: multfactor <= 11916;
@@ -29,8 +28,9 @@ module quant_4x4 #(
                     3'b011: multfactor <= 9362;
                     3'b100: multfactor <= 8192;
                     3'b101: multfactor <= 7282;
-                endcase 
-            else if (i == 5 || i == 7 || i == 12 || i == 15) 
+                    default: $display(QP_MOD_6);
+                endcase
+            else if (i == 5'd5 || i == 5'd7 || i == 5'd12 || i == 5'd15) 
                 case (QP_MOD_6)
                     3'b000: multfactor <= 5243;
                     3'b001: multfactor <= 4660;
@@ -50,8 +50,9 @@ module quant_4x4 #(
                 endcase 
                 
             // Implement Sign
-            quantized[i] <= mode ? (((transformed[i] * multfactor) + fintra) << (QP_BY_6+15)) : (((transformed[i] * multfactor) + finter) << QP_BY_6+15);
-            
+            // quantized[i] <= mode ? (((transformed[i] * multfactor) + fintra) << (QP_BY_6+15)) : (((transformed[i] * multfactor) + finter) << (QP_BY_6+15));
+            quantized[4'(i)] <= (((transformed[4'(i)] * multfactor) + finter) << (QP_BY_6+15));
+
         end     
        
     end

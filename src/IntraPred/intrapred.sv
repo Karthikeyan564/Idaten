@@ -131,6 +131,26 @@ module intrapred #(
 //		.toppixels(toppixels_luma16x16),
 //		.leftpixels(leftpixels_luma16x16));
 
+//    // ChromaB 2x2
+//    extractor #(.MB_SIZE_L(2), .MB_SIZE_W(2)) uextractor_chromab2x2 (
+//        .clk(clk),
+//        .reset(reset),
+//        .enable(enable),
+//        .mbnumber(mbnumber),
+//        .mb(mb_chromab2x2),
+//        .toppixels(toppixels_chromab2x2),
+//        .leftpixels(leftpixels_chromab2x2));
+        
+//    // ChromaR 2x2
+//    extractor #(.MB_SIZE_L(2), .MB_SIZE_W(2)) uextractor_chromar2x2 (
+//        .clk(clk),
+//        .reset(reset),
+//        .enable(enable),
+//        .mbnumber(mbnumber),
+//        .mb(mb_chromar2x2),
+//        .toppixels(toppixels_chromar2x2),
+//        .leftpixels(leftpixels_chromar2x2));
+
     // ChromaB 8x8
     extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromab8x8 (
         .clk(clk),
