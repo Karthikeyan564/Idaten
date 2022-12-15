@@ -9,6 +9,7 @@ module tran_4x4 #(
     output reg [BIT_LENGTH : 0] transformed [15:0]);
     
     reg [BIT_LENGTH : 0] intermediate [15:0];
+    reg [5:0] i;
 
     always @(posedge clk) begin
         
@@ -37,7 +38,11 @@ module tran_4x4 #(
             intermediate[13] = residuals[1] - residuals[5]<<1 + residuals[9]<<1 - residuals[13];
             intermediate[14] = residuals[2] - residuals[6]<<1 + residuals[10]<<1 - residuals[14];
             intermediate[15] = residuals[3] - residuals[7]<<1 + residuals[11]<<1 - residuals[15];
+            for(i=0;i<16;i++) begin
+                if(intermediate[i][31] == 1)
+                    intermediate[i] = -intermediate[i];
             
+            end      
        // Stage 2
        // Row 1
             transformed[0] = intermediate[0] + intermediate[1] + intermediate[2] + intermediate[3];
@@ -62,7 +67,13 @@ module tran_4x4 #(
             transformed[12] = intermediate[12] + intermediate[13] + intermediate[14] + intermediate[15];
             transformed[13] = intermediate[12]<<1 + intermediate[13] - intermediate[14] - intermediate[15]<<1;
             transformed[14] = intermediate[12] - intermediate[13] - intermediate[14] - intermediate[15];
-            transformed[15] = intermediate[12] - intermediate[13]<<1 + intermediate[14]<<1 - intermediate[15];    
+            transformed[15] = intermediate[12] - intermediate[13]<<1 + intermediate[14]<<1 - intermediate[15];  
+            
+            for(i=0;i<16;i++) begin
+                if(transformed[i][31] == 1)
+                    transformed[i] = -transformed[i];
+            
+            end  
         end
           
      end
