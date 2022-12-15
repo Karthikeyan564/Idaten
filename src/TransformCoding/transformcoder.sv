@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 
 module transformcoder #(
-    parameter BIT_LENGTH = 15)(
+    parameter BIT_LENGTH = 31)(
     input clk,
     input enable,
     input reset,
@@ -12,14 +12,13 @@ module transformcoder #(
     wire [BIT_LENGTH:0] res2tran [15:0];
     wire [BIT_LENGTH:0] tran2quant [15:0];
     wire [BIT_LENGTH:0] quant2tran [15:0];
-    wire [BIT_LENGTH:0] tran2res [15:0] = processedres;
     
     reg mode = 0;
     
     reg [2:0] QP_MOD_6;
     reg [3:0] QP_BY_6;
     
-    always @ (posedge clk) begin
+    initial begin
     
         if( QP == 0 || QP == 6 || QP == 12 || QP == 18 || QP == 24 || QP == 30 || QP == 36 || QP == 42 || QP == 48) 
             QP_MOD_6 = 3'b000;
@@ -86,6 +85,6 @@ module transformcoder #(
         .enable(enable),
         .reset(reset),
         .transformed(quant2tran),
-        .residuals(tran2res));
+        .residuals(processedres));
     
 endmodule

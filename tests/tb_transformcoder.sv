@@ -2,7 +2,7 @@
 
 module transformcoder_tb;
 
-    parameter BIT_LENGTH = 15;
+    parameter BIT_LENGTH = 31;
 
     reg clk, enable, reset;
     reg [BIT_LENGTH:0] residuals [15:0];
@@ -16,7 +16,7 @@ module transformcoder_tb;
         .reset(reset),
         .residuals(residuals),
         .processedres(processed),
-        .QP(6'd35));
+        .QP(6'd7));
     
     initial begin
     
@@ -24,8 +24,8 @@ module transformcoder_tb;
         reset = 0;
         for (i = 0; i < 16; i = i +1) residuals[i] = $urandom%20;
         clk = 0;
-        #1 clk = 1;
-        #500 clk = 0;
+        #5 clk = 1;
+        forever #10 clk = ~clk;
         
     end
     

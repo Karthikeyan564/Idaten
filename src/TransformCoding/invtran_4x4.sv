@@ -22,10 +22,10 @@ module invtran_4x4 #(
         end
         
         for ( j = 0; j < 4; j = j + 1) begin
-            residuals[0+j] = intermediate[0+j] + intermediate[1+j] + intermediate[2+j] + (intermediate[3+j]>>1);
-            residuals[1+j] = intermediate[0+j] + (intermediate[1+j]>>1) - intermediate[2+j] - intermediate[3+j];
-            residuals[2+j] = intermediate[0+j] - (intermediate[1+j]>>1) - intermediate[2+j] + intermediate[3+j];
-            residuals[3+j] = intermediate[0+j] - intermediate[1+j] + intermediate[2+j] - (intermediate[3+j]>>1);
+            residuals[j*4 + 0] = intermediate[0+j] + intermediate[1+j] + intermediate[2+j] + (intermediate[3+j]>>1);
+            residuals[j*4 + 1] = intermediate[0+j] + (intermediate[1+j]>>1) - intermediate[2+j] - intermediate[3+j];
+            residuals[j*4 + 2] = intermediate[0+j] - (intermediate[1+j]>>1) - intermediate[2+j] + intermediate[3+j];
+            residuals[j*4 + 3] = intermediate[0+j] - intermediate[1+j] + intermediate[2+j] - (intermediate[3+j]>>1);
         end
       
     end

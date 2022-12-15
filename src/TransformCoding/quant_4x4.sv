@@ -2,7 +2,7 @@
 
 module quant_4x4 #(
     parameter BIT_LENGTH = 15,
-    parameter finter = 10,
+    parameter finter = 21845,
     parameter fintra = 11)(
     input clk,
     input enable,
@@ -50,8 +50,8 @@ module quant_4x4 #(
                 endcase 
                 
             // Implement Sign
-            // quantized[i] <= mode ? (((transformed[i] * multfactor) + fintra) << (QP_BY_6+15)) : (((transformed[i] * multfactor) + finter) << (QP_BY_6+15));
-            quantized[4'(i)] <= (((transformed[4'(i)] * multfactor) + finter) << (QP_BY_6+15));
+            // quantized[i] <= mode ? (((transformed[i] * multfactor) + fintra) >> (QP_BY_6+15)) : (((transformed[i] * multfactor) + finter) >> (QP_BY_6+15));
+            quantized[i] <= (((transformed[i] * multfactor) + finter) >> (QP_BY_6+15));
 
         end     
        
