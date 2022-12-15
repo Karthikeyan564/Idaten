@@ -18,7 +18,7 @@ module tb_intrapred;
     end
     
     initial begin
-    mbnumber = 12'b000000000001;
+    mbnumber = 12'd0;
     end
     
     

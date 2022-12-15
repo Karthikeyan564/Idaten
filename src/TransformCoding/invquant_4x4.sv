@@ -19,33 +19,33 @@ module invquant_4x4 #(
         
             if (i == 0 || i == 2 || i == 8 || i == 10) 
                 case (QP_MOD_6)
-                    3'b000: multfactor <= 5'd10;
-                    3'b001: multfactor <= 5'd11;
-                    3'b010: multfactor <= 5'd13;
-                    3'b011: multfactor <= 5'd14;
-                    3'b100: multfactor <= 5'd16;
-                    3'b101: multfactor <= 5'd18;
+                    3'b000: multfactor = 5'd10;
+                    3'b001: multfactor = 5'd11;
+                    3'b010: multfactor = 5'd13;
+                    3'b011: multfactor = 5'd14;
+                    3'b100: multfactor = 5'd16;
+                    3'b101: multfactor = 5'd18;
                 endcase 
             else if (i == 5 || i == 7 || i == 12 || i == 15) 
                 case (QP_MOD_6)
-                    3'b000: multfactor <= 5'd16;
-                    3'b001: multfactor <= 5'd18;
-                    3'b010: multfactor <= 5'd20;
-                    3'b011: multfactor <= 5'd23;
-                    3'b100: multfactor <= 5'd25;
-                    3'b101: multfactor <= 5'd29;
+                    3'b000: multfactor = 5'd16;
+                    3'b001: multfactor = 5'd18;
+                    3'b010: multfactor = 5'd20;
+                    3'b011: multfactor = 5'd23;
+                    3'b100: multfactor = 5'd25;
+                    3'b101: multfactor = 5'd29;
                 endcase 
             else 
                 case (QP_MOD_6)
-                    3'b000: multfactor <= 5'd13;
-                    3'b001: multfactor <= 5'd14;
-                    3'b010: multfactor <= 5'd16;
-                    3'b011: multfactor <= 5'd18;
-                    3'b100: multfactor <= 5'd20;
-                    3'b101: multfactor <= 5'd23;
+                    3'b000: multfactor = 5'd13;
+                    3'b001: multfactor = 5'd14;
+                    3'b010: multfactor = 5'd16;
+                    3'b011: multfactor = 5'd18;
+                    3'b100: multfactor = 5'd20;
+                    3'b101: multfactor = 5'd23;
                 endcase 
                 
-            transformed[i] <= ((quantized[i] * multfactor) << QP_BY_6);
+            transformed[i] = ((quantized[i] * multfactor) << (QP_BY_6));
             
         end     
        

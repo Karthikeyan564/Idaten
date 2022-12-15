@@ -2,8 +2,8 @@
 
 module extractor #(
     parameter BIT_LENGTH = 15,
-    parameter LENGTH = 1280,
-    parameter WIDTH = 720,
+    parameter LENGTH = 4,
+    parameter WIDTH = 4,
     parameter MB_SIZE_L = 16,
     parameter MB_SIZE_W = 16)(
     input clk,
@@ -11,7 +11,7 @@ module extractor #(
     input enable,
     input [12:0] mbnumber,
     output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0],
-    output reg [7:0] toppixels [2*MB_SIZE_W-1:0],
+    output reg [7:0] toppixels [MB_SIZE_W-1:0],
     output reg [7:0] leftpixels [MB_SIZE_L-1:0]);
     
     reg [7:0] image [LENGTH*WIDTH-1 : 0];
@@ -37,11 +37,11 @@ module extractor #(
 	endcase
 	
 	case (MB_SIZE_W) 
-	       5'd16:      assign rowShift = 4;
-	       5'd8:       assign rowShift = 3;
-	       5'd4:       assign rowShift = 2;
-	       5'd2:       assign rowShift = 1;
-	       default:    assign rowShift = 4;
+	       5'd16:      assign colShift = 4;
+	       5'd8:       assign colShift = 3;
+	       5'd4:       assign colShift = 2;
+	       5'd2:       assign colShift = 1;
+	       default:    assign colShift = 4;
 	endcase
 	
     
