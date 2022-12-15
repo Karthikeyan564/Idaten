@@ -7,11 +7,11 @@ module transformcoder #(
     input reset,
     input [5:0] QP,
     input [BIT_LENGTH:0] residuals [15:0],
-    output reg [BIT_LENGTH:0] processedres [15:0]);
+    output reg signed[BIT_LENGTH:0] processedres [15:0]);
     
-    wire [BIT_LENGTH:0] res2tran [15:0];
-    wire [BIT_LENGTH:0] tran2quant [15:0];
-    wire [BIT_LENGTH:0] quant2tran [15:0];
+    wire signed [BIT_LENGTH:0] res2tran [15:0];
+    wire signed [BIT_LENGTH:0] tran2quant [15:0];
+    wire signed [BIT_LENGTH:0] quant2tran [15:0];
     
     reg mode = 0;
     
