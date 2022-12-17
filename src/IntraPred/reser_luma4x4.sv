@@ -13,14 +13,14 @@ module reser_luma4x4 (
 	input [7:0] hdpred [15:0],
     input [7:0] ddlpred [15:0],
 	input [7:0] ddrpred [15:0],
-    output reg [7:0] vres [15:0],
-	output reg [7:0] hres [15:0],
-    output reg [7:0] vlres [15:0],
-	output reg [7:0] vrres [15:0],
-	output reg [7:0] hures [15:0],
-	output reg [7:0] hdres [15:0],
-    output reg [7:0] ddlres [15:0],
-	output reg [7:0] ddrres [15:0]);
+    output reg signed [7:0] vres [15:0],
+	output reg signed [7:0] hres [15:0],
+    output reg signed [7:0] vlres [15:0],
+	output reg signed [7:0] vrres [15:0],
+	output reg signed [7:0] hures [15:0],
+	output reg signed [7:0] hdres [15:0],
+    output reg signed [7:0] ddlres [15:0],
+	output reg signed [7:0] ddrres [15:0]);
 	
 	integer i;
 
