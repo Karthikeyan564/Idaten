@@ -20,9 +20,6 @@ module tb_intrapred;
     
     initial begin
     mbnumber = 12'd0;
-    end
-    
-    
-    
+    end    
     
 endmodule

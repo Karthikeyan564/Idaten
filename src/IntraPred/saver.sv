@@ -1,18 +1,16 @@
 `timescale 1ns/1ps
 
 module saver #(
-    parameter BIT_LENGTH = 15,
+    parameter BIT_LENGTH = 31,
     parameter LENGTH = 1280,
     parameter WIDTH = 720,
-    parameter MB_SIZE_L = 16,
-    parameter MB_SIZE_W = 16)(
+    parameter MB_SIZE_L = 8,
+    parameter MB_SIZE_W = 8)(
     input clk,
     input reset,
     input enable,
-    input [7:0] sads [2:0],
-    input [7:0] vres [MB_SIZE_L*MB_SIZE_W-1:0],
-	input [7:0] hres [MB_SIZE_L*MB_SIZE_W-1:0],
-    input [7:0] dcres [MB_SIZE_L*MB_SIZE_W-1:0],
+    input [7:0] sads [(MB_SIZE_L == 4 ? 7 : 2):0],
+    input [7:0] allresidues [(MB_SIZE_L == 4 ? 7 : 2):0][(MB_SIZE_L*MB_SIZE_W)-1:0],
     input [12:0] mbnumber,
     output reg [2:0] mode);
 
@@ -54,7 +52,7 @@ module saver #(
 
             min = 0;
             
-            for (i = 1; i < 8; i = i + 1) begin
+            for (i = 1; i < (MB_SIZE_L == 4 ? 8 : 3); i = i + 1) begin
             
                 if (sads[2'(i)] < sads[2'(min)]) min = 3'(i);
 
@@ -65,15 +63,8 @@ module saver #(
 
             modes[9'(mbnumber)] = min;
             mode = min;
-
-            case (min)
-				
-				3'b000: res = vres;
-				3'b001: res = hres;
-				3'b010: res = dcres;
-				default: res = vres;
-
-			endcase
+            
+            res = allresidues[min];
 
             for (i = 0; i < MB_SIZE_L; i = i +1) begin
                 for (j = 0; j < MB_SIZE_W; j = j + 1) begin
