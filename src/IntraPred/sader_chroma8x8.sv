@@ -4,9 +4,9 @@ module sader_chroma8x8 (
     input clk,
     input reset,
     input enable,
-    input [7:0] vres [63:0],
-	input [7:0] hres [63:0],
-	input [7:0] dcres [63:0],
+    input signed [7:0] vres [63:0],
+	input signed [7:0] hres [63:0],
+	input signed [7:0] dcres [63:0],
     output reg [7:0] sads [2:0]);
 
     reg signed [7:0] vsamp8;

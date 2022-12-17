@@ -4,9 +4,9 @@ module sader_luma16x16 (
     input clk,
     input reset,
     input enable,
-    input [7:0] vres [255:0],
-	input [7:0] hres [255:0],
-	input [7:0] dcres [255:0],
+    input signed [7:0] vres [255:0],
+	input signed [7:0] hres [255:0],
+	input signed [7:0] dcres [255:0],
     output reg [7:0] sads [2:0]);
 
     reg signed [7:0] vsamp16;

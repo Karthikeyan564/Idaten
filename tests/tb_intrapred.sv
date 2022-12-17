@@ -15,13 +15,11 @@ module tb_intrapred;
     
     initial begin
     enable = 1;
+    reset = 0;
     end
     
     initial begin
-    mbnumber = 12'b000000000001;
-    end
-    
-    
-    
+    mbnumber = 12'd0;
+    end    
     
 endmodule

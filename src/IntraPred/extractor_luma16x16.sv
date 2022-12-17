@@ -57,20 +57,20 @@ module extractor_luma16x16 #(
             col <= (mbnumber%K2) << colShift;
 
             // Fetch mb
-            for (j = 0; j < 16; j = j + 1) begin
-                for (k = 0; k < 16; k = k +1) begin
-                    mbintermediate[(j<<4) + k] = image[((row+16'(j))<<8) + (col+16'(k))];
+            for (j = 0; j < MB_SIZE_L; j = j + 1) begin
+                for (k = 0; k < MB_SIZE_W; k = k +1) begin
+                    mbintermediate[(j*MB_SIZE_L) + k] = image[((row+16'(j))*LENGTH) + (col+16'(k))];
                 end
             end
             
             // Fetch toppixels
-            for (j = 0; j < 16; j = j + 1) begin
-                toppixels[4'(j)] = (row == 0 ? 128 : (image[((row-1)<<8) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
+            for (j = 0; j < MB_SIZE_W; j = j + 1) begin
+                toppixels[5'(j)] = (row == 0 ? 128 : (image[((row-1)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
             end
 
             // Fetch leftpixels
-            for (i = 0; i < 16; i = i +1) begin
-                leftpixels[4'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))<<8) + (col-1)])); // same.
+            for (i = 0; i < MB_SIZE_L; i = i +1) begin
+                leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col-1)])); // same.
             end
             
         end
