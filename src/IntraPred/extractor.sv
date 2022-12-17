@@ -2,8 +2,8 @@
 
 module extractor #(
     parameter BIT_LENGTH = 15,
-    parameter LENGTH = 4,
-    parameter WIDTH = 4,
+    parameter LENGTH = 16,
+    parameter WIDTH = 16,
     parameter MB_SIZE_L = 16,
     parameter MB_SIZE_W = 16)(
     input clk,

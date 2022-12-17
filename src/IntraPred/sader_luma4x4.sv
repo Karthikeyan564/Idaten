@@ -4,14 +4,14 @@ module sader_luma4x4 (
     input clk,
     input reset,
     input enable,
-    input [7:0] vres [15:0],
-	input [7:0] hres [15:0],
-    input [7:0] vlres [15:0],
-	input [7:0] vrres [15:0],
-	input [7:0] hures [15:0],
-	input [7:0] hdres [15:0],
-    input [7:0] ddlres [15:0],
-	input [7:0] ddrres [15:0],
+    input signed [7:0] vres [15:0],
+	input signed [7:0] hres [15:0],
+    input signed [7:0] vlres [15:0],
+	input signed [7:0] vrres [15:0],
+	input signed [7:0] hures [15:0],
+	input signed [7:0] hdres [15:0],
+    input signed [7:0] ddlres [15:0],
+	input signed [7:0] ddrres [15:0],
     output reg [7:0] sads [7:0] );
 
     reg signed [7:0] vsamp;

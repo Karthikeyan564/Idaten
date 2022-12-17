@@ -28,6 +28,8 @@ module saver #(
 	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
 	wire [BIT_LENGTH:0] rowShift, colShift;
 	
+	int fd;
+	
 	case (MB_SIZE_L) 
 	
 	       5'b10000:   assign rowShift = 4;
@@ -52,12 +54,9 @@ module saver #(
 
             min = 0;
             
-            for (i = 1; i < (MB_SIZE_L == 4 ? 8 : 3); i = i + 1) begin
-            
-                if (sads[2'(i)] < sads[2'(min)]) min = 3'(i);
+            for (i = 1; i < (MB_SIZE_L == 4 ? 8 : 3); i = i + 1) 
+                if (sads[3'(i)] < sads[3'(min)]) min = 3'(i);
 
-            end 
-            
             row <= (mbnumber%K1) << rowShift;
             col <= (mbnumber%K2) << colShift;
 
@@ -66,12 +65,11 @@ module saver #(
             
             res = allresidues[min];
 
-            for (i = 0; i < MB_SIZE_L; i = i +1) begin
-                for (j = 0; j < MB_SIZE_W; j = j + 1) begin
+            for (i = 0; i < MB_SIZE_L; i = i +1) 
+                for (j = 0; j < MB_SIZE_W; j = j + 1) 
                     residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; //is this right??
-                end
-            end
-
+                    
+                
         end
 
     end

@@ -71,16 +71,16 @@ module intrapred #(
 //	6 -> wire [7:0] ddlres_luma4x4 [15:0];
 //	7 -> wire [7:0] ddrres_luma4x4 [15:0];
 	
-	wire [7:0] res_luma16x16 [2:0][255:0];
+	wire signed [7:0] res_luma16x16 [2:0][255:0];
 //  0 -> wire [7:0] vres_luma16x16 [255:0];
 //  1 -> wire [7:0] hres_luma16x16 [255:0];
 //  2 -> wire [7:0] dcres_luma16x16 [255:0];
     
-    wire [7:0] res_chromab8x8 [2:0][63:0];
+    wire signed [7:0] res_chromab8x8 [2:0][63:0];
 //  0 -> wire [7:0] vres_chromab8x8 [63:0];
 //  1 -> wire [7:0] hres_chromab8x8 [63:0];
 //  2 -> wire [7:0] dcres_chromab8x8 [63:0];
-    wire [7:0] res_chromar8x8 [2:0][63:0];
+    wire signed [7:0] res_chromar8x8 [2:0][63:0];
 //	0 -> wire [7:0] vres_chromar8x8 [63:0];
 //	1 -> wire [7:0] hres_chromar8x8 [63:0];
 //	2 -> wire [7:0] dcres_chromar8x8 [63:0];
