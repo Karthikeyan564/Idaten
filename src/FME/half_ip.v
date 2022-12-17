@@ -11,9 +11,9 @@
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: 
+// : 
 // 
-// Revision:
+// Revision:Dependencies
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
@@ -22,7 +22,7 @@
 /* int_pix_ind - address of the centre integer pixel
  half - interpolated value*/
  
-module half_ip(input clk, input rst, input [7:0] int_ind_pix, output reg [7:0] half [8:0]);
+module half_ip(input clk, input rst, input [7:0] int_ind_pix, output reg [8:0][7:0] half);
 
  
 reg [7:0] lut [255:0];
