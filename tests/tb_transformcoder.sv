@@ -16,13 +16,13 @@ module transformcoder_tb;
         .reset(reset),
         .residuals(residuals),
         .processedres(processed),
-        .QP(6'd7));
+        .QP(6'd12));
     
     initial begin
     
         enable = 1;
         reset = 0;
-        for (i = 0; i < 16; i = i +1) residuals[i] = $urandom%20;
+        for (i = 0; i < 16; i = i +1) residuals[i] = $urandom%250;
         clk = 0;
         #5 clk = 1;
         forever #10 clk = ~clk;
