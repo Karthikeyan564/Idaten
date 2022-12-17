@@ -15,6 +15,7 @@ module tb_intrapred;
     
     initial begin
     enable = 1;
+    reset = 0;
     end
     
     initial begin

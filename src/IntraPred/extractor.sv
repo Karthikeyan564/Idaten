@@ -11,8 +11,8 @@ module extractor #(
     input enable,
     input [12:0] mbnumber,
     output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0],
-    output reg [7:0] toppixels [MB_SIZE_W-1:0],
-    output reg [7:0] leftpixels [MB_SIZE_L-1:0]);
+    output reg [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0],
+    output reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0]);
     
     reg [7:0] image [LENGTH*WIDTH-1 : 0];
     reg [7:0] mbintermediate [MB_SIZE_L*MB_SIZE_W-1:0];
@@ -55,20 +55,25 @@ module extractor #(
             col <= (mbnumber%K2) << colShift;
 
             // Fetch mb
-            for (j = 0; j < MB_SIZE_L; j = j + 1) begin
-                for (k = 0; k < MB_SIZE_W; k = k +1) begin
+            for (j = 0; j < MB_SIZE_L; j = j + 1) 
+                for (k = 0; k < MB_SIZE_W; k = k +1) 
                     mbintermediate[(j*MB_SIZE_L) + k] = image[((row+16'(j))*LENGTH) + (col+16'(k))];
-                end
+                
+            if (MB_SIZE_W == 4) begin
+                // Fetch toppixels
+                for (j = 0; j < 8; j = j + 1) 
+                    toppixels[5'(j)] = (row == 0 ? 128 : (image[((row)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
+                // Fetch leftpixels
+                for (i = 0; i < 5; i = i +1) 
+                    leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col)])); // same.
             end
-            
-            // Fetch toppixels
-            for (j = 0; j < MB_SIZE_W; j = j + 1) begin
-                toppixels[5'(j)] = (row == 0 ? 128 : (image[((row)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
-            end
-
-            // Fetch leftpixels
-            for (i = 0; i < MB_SIZE_L; i = i +1) begin
-                leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col)])); // same.
+            else begin
+                 // Fetch toppixels
+                for (j = 0; j < MB_SIZE_W; j = j + 1) 
+                    toppixels[5'(j)] = (row == 0 ? 128 : (image[((row)*LENGTH) + (col+16'(j))])); // should not come from the image, should come from the pred_frame.
+                // Fetch leftpixels
+                for (i = 0; i < MB_SIZE_L; i = i +1) 
+                    leftpixels[5'(i)] = ((col == 0) ? 128 : (image[((row+16'(i))*LENGTH) + (col)])); // same.
             end
             
         end
