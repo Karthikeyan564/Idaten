@@ -16,6 +16,10 @@ module saver_luma16x16 #(
     input [12:0] mbnumber,
     output reg [2:0] mode);
 
+    int fd;
+    
+    initial fd = $fopen("modes", "w+");
+
     reg [4:0] i, j;
     
     reg [2:0] min;
@@ -79,6 +83,11 @@ module saver_luma16x16 #(
                 for (j = 0; j < MB_SIZE_W; j = j + 1) begin
                     residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; //is this right??
                 end
+            end
+
+            if (fd) begin
+                $fwrite(fd, residues);
+                $fclose(fd);
             end
 
         end

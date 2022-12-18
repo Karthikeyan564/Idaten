@@ -11,9 +11,9 @@
 // Tool Versions: 
 // Description: 
 // 
-// Dependencies: 
+// : 
 // 
-// Revision:
+// Revision:Dependencies
 // Revision 0.01 - File Created
 // Additional Comments:
 // 
@@ -22,10 +22,10 @@
 /* int_pix_ind - address of the centre integer pixel
  half - interpolated value*/
  
-module half_ip(input clk, input rst, input [7:0] int_ind_pix, output reg [7:0] half [8:0]);
+module half_ip(input clk, input rst, input [7:0] int_ind_pix, input [7:0] lut [255:0], output reg [8:0][7:0] half, output reg done);
 
  
-reg [7:0] lut [255:0];
+
 wire [47:0] pixels_int;
 reg [47:0] pixels;
 reg [7:0] temp_address;
@@ -36,11 +36,6 @@ reg [7:0] half_intr;
 parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4, S5 = 5, S6 = 6, S7 = 7, S8 = 8, S9 = 9, S10 = 10, S11 = 11, S12 = 12, S13 = 13, S14 = 14, 
               S15 = 15, S16 = 16, S17 = 17, S18 = 18, S19 = 19, S20 = 20, S21 = 21, S22 = 22, S23 = 23, S24 = 24, S25 = 25;
 reg [4:0] state;
-
-initial begin
-    $readmemh("mbvalues_ref.mem" ,lut); 
-end
-
 
 six_tf dut1 (.clk(clk), .a(pixels_int[7:0]), .b(pixels_int[15:8]), .c(pixels_int[23:16]), .d(pixels_int[31:24]), .e(pixels_int[39:32]), .f(pixels_int[47:40]), .half(half_intr));    
 six_tf dut2 (.clk(clk), .a(pixels[7:0]), .b(pixels[15:8]), .c(pixels[23:16]), .d(pixels[31:24]), .e(pixels[39:32]), .f(pixels[47:40]), .half(half_intr));
@@ -55,7 +50,7 @@ assign pixels_int[47:40] = lut[temp_address + 3];
 always @ (posedge clk or negedge rst)
 begin
 if (!rst) begin
-state <= S0; temp_address <= int_ind_pix -64; 
+state <= S0; temp_address <= int_ind_pix -64; done <=0 ;
 end 
 else begin
 case(state)
@@ -146,7 +141,7 @@ S22: begin state <= S23; // 3
      end
 S23: begin state <= S24; half[4] <= lut[int_ind_pix]; half [3]<= half_intr; end
 S24: begin state <= S25; half [8]<= half_intr; end 
-S25: begin state <= S25; end
+S25: begin state <= S25; done <= 1; end
 endcase
 end
 end

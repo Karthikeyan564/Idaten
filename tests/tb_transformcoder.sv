@@ -16,7 +16,7 @@ module transformcoder_tb;
         .reset(reset),
         .residuals(residuals),
         .processedres(processed),
-        .QP(6'd5));
+        .QP(6'd1));
     
     initial begin
     
@@ -24,22 +24,22 @@ module transformcoder_tb;
         reset = 0;
         //for (i = 0; i < 16; i = i +1) residuals[i] = $urandom%255;
         
-        residuals[0] = 32'd0;
-        residuals[1] = 32'd0;
-        residuals[2] = 32'd0;
-        residuals[3] = 32'd0;
-        residuals[4] = 32'd0;
-        residuals[5] = 32'd0;
-        residuals[6] = 32'd0;
-        residuals[7] = 32'd0;
-        residuals[8] = 32'd10;
-        residuals[9] = 32'd10;
-        residuals[10] = 32'd10;
-        residuals[11] = 32'd10;
-        residuals[12] = 32'd10;
-        residuals[13] = 32'd10;
-        residuals[14] = 32'd10;
-        residuals[15] = 32'd10;
+        residuals[0] = 8'h80;
+        residuals[1] = 8'h80;
+        residuals[2] = 8'h80;
+        residuals[3] = 8'h80;
+        residuals[4] = 8'h80;
+        residuals[5] = 8'h80;
+        residuals[6] = 8'h80;
+        residuals[7] = 8'h80;
+        residuals[8] = 8'h80;
+        residuals[9] = 8'h80;
+        residuals[10] = 8'h80;
+        residuals[11] = 8'h80;
+        residuals[12] = 8'h80;
+        residuals[13] = 8'h80;
+        residuals[14] = 8'h80;
+        residuals[15] = 8'h80;
         
         
         clk = 0;

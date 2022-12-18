@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module satd_gen(input clk, rst1, input [8:0][7:0] half_quat , input [15:0][7:0] cur_pix, output [3:0] best);
+module satd_gen(input clk, rst1, input [8:0][7:0] half_quat , input [15:0][7:0] cur_pix, output [3:0] best, output reg done);
 
 wire [3:0] state [8:0];
 wire on [8:0];
@@ -36,6 +36,6 @@ endgenerate
 
 assign com_en = on[0] ? 1'b0 : 1'b1;
 
-comparator dutx (.clk(clk), .en(com_en), .distort(distort), .best(best)); 
+comparator dutx (.clk(clk), .en(com_en), .distort(distort), .best(best), .done(done)); 
 
 endmodule
