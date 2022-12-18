@@ -1,4 +1,4 @@
-module comparator(input clk, input en, input [8:0][15:0] distort, output reg [3:0] best);
+module comparator(input clk, input en, input [8:0][15:0] distort, output reg [3:0] best, output reg done);
 
 
 wire [3:0] a,b,c,d,e,f,g,h;
@@ -15,8 +15,12 @@ assign h = distort[g] <= distort[8] ? g : 8;
 always @ (posedge clk)
 begin
 if(en)
-
-best <= h;
+begin
+    best <= h;
+    done <= 1;
+end
+else 
+    done <= 0;
 
 end
 endmodule
