@@ -14,8 +14,6 @@ module saver #(
     input [12:0] mbnumber,
     output reg [2:0] mode);
 
-    int fd;
-
     reg [4:0] i, j;
     
     reg [2:0] min;
@@ -29,26 +27,19 @@ module saver #(
     reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
 	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
 	wire [BIT_LENGTH:0] rowShift, colShift;
-	
-	int fd;
-	int written = 0;
 		
 	case (MB_SIZE_L) 
-	
-	       5'b10000:   assign rowShift = 4;
-	       5'b01000:   assign rowShift = 3;
-	       5'b00100:   assign rowShift = 2;
-	       default:    assign rowShift = 4;
-	       
+       5'b10000:   assign rowShift = 4;
+       5'b01000:   assign rowShift = 3;
+       5'b00100:   assign rowShift = 2;
+       default:    assign rowShift = 4;
 	endcase
 	
 	case (MB_SIZE_W) 
-	
-	       5'b10000:   assign colShift = 4;
-	       5'b01000:   assign colShift = 3;
-	       5'b00100:   assign colShift = 2;
-	       default:    assign colShift = 4;
-	       
+       5'b10000:   assign colShift = 4;
+       5'b01000:   assign colShift = 3;
+       5'b00100:   assign colShift = 2;
+       default:    assign colShift = 4;
 	endcase
 
     always @(posedge clk) begin
@@ -70,14 +61,8 @@ module saver #(
 
             for (i = 0; i < MB_SIZE_L; i = i +1) 
                 for (j = 0; j < MB_SIZE_W; j = j + 1) 
-                    residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; //is this right??
+                    residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; 
                     
-            if ((written == 0) && (MB_SIZE_L == 16)) begin
-                written = 1;
-                fd = $fopen("residues_16x16.mem", "w");
-                $fwrite(fd, residues);
-                $fclose(fd);
-            end
         end
 
     end

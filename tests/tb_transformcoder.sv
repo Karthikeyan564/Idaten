@@ -16,7 +16,7 @@ module transformcoder_tb;
         .reset(reset),
         .residuals(residuals),
         .processedres(processed),
-        .QP(6'd5));
+        .QP(6'd1));
     
     initial begin
     
