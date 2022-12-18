@@ -164,7 +164,7 @@ if (!rst)
 state <= S0;
 else begin
 case(state)
-S0: begin state<= S1; sel <= 2'b01; end
+S0: begin state<= S1; sel <= 2'b01; distort <= 4'b0000; end
 S1: begin state <= S2; rc1 <= (ref_pix - cur_pix[0]) >= 0 ? ref_pix - cur_pix[0] : cur_pix[0] - ref_pix;
                        rc2 <= (ref_pix - cur_pix[1]) >= 0 ? ref_pix - cur_pix[1] : cur_pix[1] - ref_pix;
                        rc3 <= (ref_pix - cur_pix[2]) >= 0 ? ref_pix - cur_pix[2] : cur_pix[2] - ref_pix;
