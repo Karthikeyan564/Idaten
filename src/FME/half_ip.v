@@ -70,7 +70,7 @@ S10: begin state <= S11; temp_address <= int_ind_pix;  half_half[7] <= (half_int
 S11: begin state <= S12; temp_address <= int_ind_pix+17; half_half[8] <= (half_intr+16)>>5;   end
 S12: begin state <= S13; temp_address <= int_ind_pix+33; half_pix[2]<= (half_intr+16)>>5; half_half[9] <= (half_intr+16)>>5; end
 S13: begin state <= S14; temp_address <= int_ind_pix+49; half_half[10] <= (half_intr+16)>>5;  end
-S14: begin state <= S15; half_pix[3]<= half_intr; half_half[11] <= (half_intr+16)>>5;   end
+S14: begin state <= S15; half_pix[3]<= (half_intr+16)>>5; half_half[11] <= (half_intr+16)>>5;   end
 S15: begin state <= S16; half_half[12] <= (half_intr+16)>>5;  end
 S16: begin state <= S17; //2
            pixels [7:0] <= lut [int_ind_pix]; 

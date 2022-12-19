@@ -20,11 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fme(input clk, rst, input[7:0] pix_pos, output reg [7:0] quat_val);
+module fme(input clk, rst, input[7:0] pix_pos, output reg [7:0] quat_val, output reg [3:0] quat_best);
 
 reg [8:0][7:0] half, quat ;
 reg rst1, rst2, rst3;
-wire [3:0] best;
+wire [3:0] best, best1;
 reg quat_en;
 wire [8:0][7:0] int_pix;
 wire [7:0][7:0] half_pix;
@@ -79,7 +79,7 @@ assign cur_pix[15] = lut[pix_pos];
 half_ip dutq (.clk(clk), .rst(rst1), .int_ind_pix(pix_pos), .lut(lut), .half(half), .done(done),.half_pix(half_pix_temp));
 satd_gen dutw (.clk(clk), .rst1(rst2), .half_quat(half), .cur_pix(cur_pix), .best(best), .done(done1));
 quat_ip dute (.en(quat_en), .int_pix(int_pix), .half_pix(half_pix), .half_cand(half), .best(best), .quat(quat));
-satd_gen dutr (.clk(clk), .rst1(rst3), .half_quat(quat), .cur_pix(cur_pix), .best(best), .done(done2));
+satd_gen dutr (.clk(clk), .rst1(rst3), .half_quat(quat), .cur_pix(cur_pix), .best(best1), .done(done2));
 
 always @ (posedge clk or negedge rst)
 begin
@@ -96,7 +96,7 @@ S4: begin rst2<= 1; state <= S5; end
 S5: begin if (done1) begin quat_en <= 1; state <= S6; end end
 S6: begin quat_en <= 0; rst3 <= 0; state <= S7; end
 S7: begin rst3<=1 ; state <= S8; end
-S8: begin if(done2) begin state <= S9; quat_val <= quat[best];end end
+S8: begin if(done2) begin state <= S9; quat_val <= quat[best1]; quat_best<= best1;end end
 S9: begin state<= S9; end
 default: begin state<=S9; end
 endcase
