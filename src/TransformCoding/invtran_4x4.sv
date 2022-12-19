@@ -6,7 +6,7 @@ module invtran_4x4 #(
     input enable,
     input reset,
     input signed [BIT_LENGTH : 0] transformed [15:0],
-    output reg signed [BIT_LENGTH : 0] residuals [15:0]);
+    output reg signed [7 : 0] residuals [15:0]);
     
     reg [5:0] i, j, k;
     reg signed [BIT_LENGTH:0] intermediate [15:0];

@@ -12,7 +12,8 @@ module saver #(
     input [7:0] sads [(MB_SIZE_L == 4 ? 7 : 2):0],
     input signed [7:0] allresidues [(MB_SIZE_L == 4 ? 7 : 2):0][(MB_SIZE_L*MB_SIZE_W)-1:0],
     input [12:0] mbnumber,
-    output reg [2:0] mode);
+    output reg [2:0] mode,
+    output reg signed [7:0] res [MB_SIZE_L*MB_SIZE_W-1:0]);
 
     reg [4:0] i, j;
     
@@ -21,8 +22,6 @@ module saver #(
     reg [2:0] modes [(LENGTH/MB_SIZE_L)*(WIDTH/MB_SIZE_W)-1:0];
     reg [12:0] row;
     reg [12:0] col;
-
-    reg signed [7:0] res [MB_SIZE_L*MB_SIZE_W-1:0];
     
     reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
 	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
