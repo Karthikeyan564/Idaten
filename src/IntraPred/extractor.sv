@@ -15,7 +15,6 @@ module extractor #(
     output reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0]);
     
     reg [7:0] image [LENGTH*WIDTH-1 : 0];
-    reg [7:0] mbintermediate [MB_SIZE_L*MB_SIZE_W-1:0];
 
     initial begin
 		$readmemh("output.mem", image);
@@ -49,15 +48,13 @@ module extractor #(
 
 		if (enable) begin
 
-            mb <= mbintermediate;
-
             row <= (mbnumber%K1) << rowShift;
             col <= (mbnumber%K2) << colShift;
 
             // Fetch mb
             for (j = 0; j < MB_SIZE_L; j = j + 1) 
                 for (k = 0; k < MB_SIZE_W; k = k +1) 
-                    mbintermediate[(j*MB_SIZE_L) + k] = image[((row+16'(j))*LENGTH) + (col+16'(k))];
+                    mb[(j*MB_SIZE_L) + k] = image[((row+16'(j))*LENGTH) + (col+16'(k))];
                 
             if (MB_SIZE_W == 4) begin
                 // Fetch toppixels
