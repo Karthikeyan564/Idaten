@@ -9,6 +9,13 @@ module transformcoder #(
     input [BIT_LENGTH:0] residuals [15:0],
     output reg signed[BIT_LENGTH:0] processedres [15:0]);
     
+    // Enable Register
+    reg [3:0] enabler = 4'd0;
+//  0 -> Forward Transform
+//  1 -> Forward Quantize
+//  2 -> Inverse Quantize
+//  3 -> Inverse Transform
+
     wire signed [BIT_LENGTH:0] res2tran [15:0];
     wire signed [BIT_LENGTH:0] tran2quant [15:0];
     wire signed [BIT_LENGTH:0] quant2tran [15:0];
@@ -56,14 +63,14 @@ module transformcoder #(
     
     tran_4x4 #(.BIT_LENGTH(BIT_LENGTH)) utran_4x4 (
         .clk(clk),
-        .enable(enable),
+        .enable(enabler[0]),
         .reset(reset),
         .residuals(residuals),
         .transformed(res2tran));
     
     quant_4x4 #(.BIT_LENGTH(BIT_LENGTH)) uquant_4x4 (
         .clk(clk),
-        .enable(enable),
+        .enable(enabler[1]),
         .reset(reset),
         .mode(mode),
         .transformed(res2tran),
@@ -73,7 +80,7 @@ module transformcoder #(
         
     invquant_4x4 #(.BIT_LENGTH(BIT_LENGTH)) uinvquant_4x4 (
         .clk(clk),
-        .enable(enable),
+        .enable(enabler[2]),
         .reset(reset),
         .quantized(tran2quant),
         .QP_BY_6(QP_BY_6),
@@ -82,9 +89,18 @@ module transformcoder #(
         
     invtran_4x4 #(.BIT_LENGTH(BIT_LENGTH)) uinvtran_4x4 (
         .clk(clk),
-        .enable(enable),
+        .enable(enabler[3]),
         .reset(reset),
         .transformed(quant2tran),
         .residuals(processedres));
+        
+    always @ (negedge clk) 
+        if (enable == 1)
+            if (enabler != 4'b1111) 
+                enabler = (enabler<<1) | 4'd1;
+
+    always @ (posedge clk)
+        if (reset == 1)
+            enabler = 4'd0;
     
 endmodule
