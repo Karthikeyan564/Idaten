@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module tb_half_ip();
+module tb_fme();
 
 reg clk, rst;
 reg [7:0] pix_pos;
@@ -29,7 +29,7 @@ wire [7:0] quat_val;
 
 fme main_dut (.clk(clk), .rst(rst), .pix_pos(pix_pos), .quat_val(quat_val));
 
-always #10 clk = ~clk;
+always #5 clk = ~clk;
 
 initial begin
 clk <= 0;
