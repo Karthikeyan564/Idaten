@@ -8,7 +8,15 @@ module intrapred #(
 	input enable,
 	input [MB_NUMBER_BITS:0] mbnumber);
     
-	// inputs
+    // Enable Register
+    reg [4:0] enabler = 5'd0;
+//  0 -> Extractor
+//  1 -> Moder
+//  2 -> Reser
+//  3 -> Sader
+//  4 -> Saver
+    
+	// Inputs
 	wire [7:0] mb_luma4x4 [15:0];
 	wire [7:0] mb_luma16x16 [255:0];
 	wire [7:0] mb_chromab8x8 [63:0];
@@ -24,7 +32,7 @@ module intrapred #(
 	wire [7:0] leftpixels_chromab8x8 [7:0];
 	wire [7:0] leftpixels_chromar8x8 [7:0];
 
-	// neighbouring pixels
+	// Neighbouring pixels
 	wire [7:0] A = toppixels_luma4x4[0];
 	wire [7:0] B = toppixels_luma4x4[1];
 	wire [7:0] C = toppixels_luma4x4[2];
@@ -39,7 +47,7 @@ module intrapred #(
 	wire [7:0] K = leftpixels_luma4x4[3];
 	wire [7:0] L = leftpixels_luma4x4[4];
 
-	// preds
+	// Preds
 	wire [7:0] vpred_luma4x4 [15:0];
 	wire [7:0] hpred_luma4x4 [15:0];
 	wire [7:0] vlpred_luma4x4 [15:0];
@@ -60,7 +68,7 @@ module intrapred #(
 	wire [7:0] hpred_chromar8x8 [63:0];
 	wire [7:0] dcpred_chromar8x8 [63:0];
 	
-	// res
+	// Residues
 	wire [7:0] res_luma4x4 [7:0][15:0];
 //	0 -> wire [7:0] vres_luma4x4 [15:0];
 //	1 -> wire [7:0] hres_luma4x4 [15:0];
@@ -85,13 +93,13 @@ module intrapred #(
 //	1 -> wire [7:0] hres_chromar8x8 [63:0];
 //	2 -> wire [7:0] dcres_chromar8x8 [63:0];
 
-	// sad	
+	// SADs	
 	wire [7:0] sads_luma4x4 [7:0];
 	wire [7:0] sads_luma16x16 [2:0];
 	wire [7:0] sads_chromab8x8 [2:0];
 	wire [7:0] sads_chromar8x8 [2:0];
 	
-	// outputs
+	// Outputs
 	reg [2:0] mode_luma4x4;
 	reg [2:0] mode_luma16x16;
 	reg [2:0] mode_chromab8x8;
@@ -102,7 +110,7 @@ module intrapred #(
 	extractor #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_luma4x4 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber),
         .mb(mb_luma4x4),
         .toppixels(toppixels_luma4x4),
@@ -112,7 +120,7 @@ module intrapred #(
 	extractor #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_luma16x16 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[0]),
 		.mbnumber(mbnumber),
 		.mb(mb_luma16x16),
 		.toppixels(toppixels_luma16x16),
@@ -122,7 +130,7 @@ module intrapred #(
     extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromab8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber),
         .mb(mb_chromab8x8),
         .toppixels(toppixels_chromab8x8),
@@ -132,7 +140,7 @@ module intrapred #(
     extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromar8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber),
         .mb(mb_chromar8x8),
         .toppixels(toppixels_chromar8x8),
@@ -143,7 +151,7 @@ module intrapred #(
 	moder_luma4x4 umoder_luma4x4 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[1]),
 		.A(A),
 		.B(B),
 		.C(C),
@@ -170,7 +178,7 @@ module intrapred #(
     moder_luma16x16 umoder_luma16x16 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .toppixels(toppixels_luma16x16),
         .leftpixels(leftpixels_luma16x16),
         .vpred(vpred_luma16x16),
@@ -181,7 +189,7 @@ module intrapred #(
     moder_chroma8x8 umoder_chromab8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8),
         .vpred(vpred_chromab8x8),
@@ -192,7 +200,7 @@ module intrapred #(
     moder_chroma8x8 umoder_chromar8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8),
         .vpred(vpred_chromar8x8),
@@ -204,7 +212,7 @@ module intrapred #(
 	reser_luma4x4 ureser_luma4x4 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[2]),
 		.mb(mb_luma4x4),
 		.vpred(vpred_luma4x4),
 		.hpred(hpred_luma4x4),
@@ -227,7 +235,7 @@ module intrapred #(
     reser_luma16x16 ureser_luma16x16 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[2]),
 		.mb(mb_luma16x16),
 		.vpred(vpred_luma16x16),
 		.hpred(hpred_luma16x16),
@@ -240,7 +248,7 @@ module intrapred #(
     reser_chroma8x8 ureser_chromab8x8 (
         .clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[2]),
 		.mb(mb_chromab8x8),
 		.vpred(vpred_chromab8x8),
 		.hpred(hpred_chromab8x8),
@@ -253,7 +261,7 @@ module intrapred #(
     reser_chroma8x8 ureser_chromar8x8 (
         .clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[2]),
 		.mb(mb_chromar8x8),
 		.vpred(vpred_chromar8x8),
 		.hpred(hpred_chromar8x8),
@@ -267,7 +275,7 @@ module intrapred #(
 	sader_luma4x4 usader_luma4x4 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[3]),
 		.vres(res_luma4x4[0]),
 		.hres(res_luma4x4[1]),
 		.vlres(res_luma4x4[2]),
@@ -282,7 +290,7 @@ module intrapred #(
     sader_luma16x16 usader_luma16x16 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[3]),
 		.vres(res_luma16x16[0]),
 		.hres(res_luma16x16[1]),
 		.dcres(res_luma16x16[2]),
@@ -292,7 +300,7 @@ module intrapred #(
 	sader_chroma8x8 usader_chromab8x8 (
 	   .clk(clk),
        .reset(reset),
-       .enable(enable),
+       .enable(enabler[3]),
        .vres(res_chromab8x8[0]),
        .hres(res_chromab8x8[1]),
        .dcres(res_chromab8x8[2]),
@@ -302,7 +310,7 @@ module intrapred #(
 	sader_chroma8x8 usader_chromar8x8 (
 	   .clk(clk),
        .reset(reset),
-       .enable(enable),
+       .enable(enabler[3]),
        .vres(res_chromar8x8[0]),
        .hres(res_chromar8x8[1]),
        .dcres(res_chromar8x8[2]),
@@ -313,7 +321,7 @@ module intrapred #(
 	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[4]),
 		.sads(sads_luma4x4),
 		.allresidues(res_luma4x4),
 		.mbnumber(mbnumber),
@@ -323,7 +331,7 @@ module intrapred #(
 	saver #(.MB_SIZE_L(16), .MB_SIZE_W(16)) usaver_luma16x16 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[4]),
 		.sads(sads_luma16x16),
 		.allresidues(res_luma16x16),
 		.mbnumber(mbnumber),
@@ -333,7 +341,7 @@ module intrapred #(
 	saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[4]),
 		.sads(sads_chromab8x8),
 		.allresidues(res_chromab8x8),
 		.mbnumber(mbnumber),
@@ -343,10 +351,19 @@ module intrapred #(
 	saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
 		.clk(clk),
 		.reset(reset),
-		.enable(enable),
+		.enable(enabler[4]),
 		.sads(sads_chromar8x8),
 		.allresidues(res_chromar8x8),
 		.mbnumber(mbnumber),
 		.mode(mode_chromar8x8));
+		
+    always @ (negedge clk) 
+        if (enable == 1)
+            if (enabler != 5'b11111) 
+                enabler = (enabler<<1) | 5'd1;
+        
+    always @ (posedge clk)
+        if (reset == 1)
+            enabler = 5'd0;
 	
 endmodule

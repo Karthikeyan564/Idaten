@@ -28,8 +28,6 @@ module reser_luma4x4 (
 
         if (enable) begin
 
-            
-
             for (i = 0; i < 16; i = i + 1) begin
 
                 vres[i] <= mb[i] - vpred[i];
