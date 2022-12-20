@@ -9,14 +9,12 @@ module reconst #(
     input clk,
     input reset,
     input enable,
-    input [12:0] mbnumber,
+    input signed [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0],
     output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0]);
         
     reg [7:0] residues [(LENGTH*WIDTH)-1:0];
     reg [2:0] modes [(LENGTH/MB_SIZE_L)*(WIDTH/MB_SIZE_W)-1:0];
-    
-    reg signed [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0];
-    
+         
     reg [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0];
     reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0];
     
@@ -70,13 +68,8 @@ module reconst #(
 
 		if (enable) begin
 
-            row <= (mbnumber%K1) << rowShift;
-            col <= (mbnumber%K2) << colShift;
-
-            // Fetch mb
-            for (j = 0; j < MB_SIZE_L; j = j + 1) 
-                for (k = 0; k < MB_SIZE_W; k = k +1) 
-                    residue[(j*MB_SIZE_L) + k] = residues[((row+16'(j))*LENGTH) + (col+16'(k))];
+            row <= 0;
+            col <= 0;
                 
             if (MB_SIZE_W == 4) begin
                 // Fetch toppixels
@@ -272,7 +265,7 @@ module reconst #(
             endcase
             
             for (i = 0; i < (MB_SIZE_L*MB_SIZE_W); i = i + 1)
-                mb[i] = allpreds[modes[mbnumber]][i] + residue[i];
+                mb[i] = allpreds[0][i] + residue[i];
             
         end
 

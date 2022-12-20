@@ -3,14 +3,16 @@
 module transformcoder #(
     parameter BIT_LENGTH = 31)(
     input clk,
-    input enable,
     input reset,
+    input enable,
     input [5:0] QP,
-    input [BIT_LENGTH:0] residuals [15:0],
-    output reg signed[BIT_LENGTH:0] processedres [15:0]);
+    input [7:0] residuals [15:0],
+    output pipeline_full,
+    output reg signed[7:0] processedres [15:0]);
     
     // Enable Register
     reg [3:0] enabler = 4'd0;
+    assign pipeline_full = enabler[3];
 //  0 -> Forward Transform
 //  1 -> Forward Quantize
 //  2 -> Inverse Quantize
