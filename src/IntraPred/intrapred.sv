@@ -19,7 +19,7 @@ module intrapred #(
     
     // Enable Register
     reg [4:0] enabler = 5'd0;
-    assign pipeline_full = enabler[4];
+    assign pipeline_full = enabler[3];
 //  0 -> Extractor
 //  1 -> Moder
 //  2 -> Reser
