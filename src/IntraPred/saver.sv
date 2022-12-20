@@ -50,8 +50,8 @@ module saver #(
             for (i = 1; i < (MB_SIZE_L == 4 ? 8 : 3); i = i + 1) 
                 if (sads[3'(i)] < sads[3'(min)]) min = 3'(i);
 
-            row <= (mbnumber%K1) << rowShift;
-            col <= (mbnumber%K2) << colShift;
+            row = (mbnumber%K1) << rowShift;
+            col = (mbnumber%K2) << colShift;
 
             modes[9'(mbnumber)] = min;
             mode = min;

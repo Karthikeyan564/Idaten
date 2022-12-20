@@ -11,8 +11,8 @@ module transformcoder #(
     output reg signed[7:0] processedres [15:0]);
     
     // Enable Register
-    reg [3:0] enabler = 4'd0;
-    assign pipeline_full = enabler[3];
+    reg [4:0] enabler = 5'd0;
+    assign pipeline_full = enabler[4];
 //  0 -> Forward Transform
 //  1 -> Forward Quantize
 //  2 -> Inverse Quantize
@@ -98,11 +98,11 @@ module transformcoder #(
         
     always @ (negedge clk) 
         if (enable == 1)
-            if (enabler != 4'b1111) 
-                enabler = (enabler<<1) | 4'd1;
+            if (enabler != 5'b11111) 
+                enabler = (enabler<<1) | 5'd1;
 
     always @ (posedge clk)
         if (reset == 1)
-            enabler = 4'd0;
+            enabler = 5'd0;
     
 endmodule

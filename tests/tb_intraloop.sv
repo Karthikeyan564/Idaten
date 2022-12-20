@@ -10,7 +10,7 @@ module tb_intraloop;
         
     initial begin
     
-        clk = 0;
+        clk = 1;
         enable = 1;
         reset = 0;
         
