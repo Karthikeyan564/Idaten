@@ -88,7 +88,6 @@ oneDtrans1 duta (.rc1(rc1),.rc2(rc2),.rc3(rc3),.rc4(rc4),.op1(op1),.op2(op2),.op
 oneDtrans2 dutb (.rc1(rc11),.rc2(rc12),.rc3(rc13),.rc4(rc14),.op1(op11),.op2(op21),.op3(op31),.op4(op41));
 
 genvar i;
-integer j,k;
 generate
     for (i=0; i<16; i++) begin
     transreg dut1 (.up(up[i]), .down(down[i]), .left(left[i]), .right(right[i]), .sel(sel), .out1(left[i]));

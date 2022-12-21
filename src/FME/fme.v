@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module fme(input clk, rst, input[7:0] pix_pos, output reg [7:0] quat_val, output reg [3:0] quat_best);
+module fme(input clk, rst, input[7:0] pix_pos, output reg [7:0] quat_val, output reg [3:0] half_best, quat_best);
 
 reg [8:0][7:0] half, quat ;
 reg rst1, rst2, rst3;
@@ -93,7 +93,7 @@ S1: begin rst1 <= 0; state <= S2;end
 S2: begin rst1<= 1; state <= S3; end
 S3: begin if(done) begin rst2 <= 0; state <= S4; end end
 S4: begin rst2<= 1; state <= S5; end
-S5: begin if (done1) begin quat_en <= 1; state <= S6; end end
+S5: begin if (done1) begin quat_en <= 1; state <= S6; half_best <= best; end end
 S6: begin quat_en <= 0; rst3 <= 0; state <= S7; end
 S7: begin rst3<=1 ; state <= S8; end
 S8: begin if(done2) begin state <= S9; quat_val <= quat[best1]; quat_best<= best1;end end

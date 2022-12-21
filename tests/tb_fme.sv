@@ -25,10 +25,10 @@ module tb_fme();
 reg clk, rst;
 reg [7:0] pix_pos;
 wire [7:0] quat_val;
-wire [3:0] quat_best;
+wire [3:0] quat_best, half_best;
 
 
-fme main_dut (.clk(clk), .rst(rst), .pix_pos(pix_pos), .quat_val(quat_val), .quat_best(quat_best));
+fme main_dut (.clk(clk), .rst(rst), .pix_pos(pix_pos), .quat_val(quat_val), .quat_best(quat_best),. half_best(half_best));
 
 always #5 clk = ~clk;
 
