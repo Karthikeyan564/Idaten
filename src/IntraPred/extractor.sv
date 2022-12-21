@@ -25,8 +25,9 @@ module extractor #(
 	
 	reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
 	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
-	wire [BIT_LENGTH:0] rowShift, colShift;
+	reg [BIT_LENGTH:0] rowShift, colShift;
 	
+    initial begin
 	case (MB_SIZE_L) 
 	       5'd16:      assign rowShift = 4;
 	       5'd8:       assign rowShift = 3;
@@ -42,7 +43,7 @@ module extractor #(
 	       5'd2:       assign colShift = 1;
 	       default:    assign colShift = 4;
 	endcase
-	
+	end
     
     always @ (posedge clk) begin
 
