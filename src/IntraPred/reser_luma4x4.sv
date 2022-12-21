@@ -30,14 +30,14 @@ module reser_luma4x4 (
 
             for (i = 0; i < 16; i = i + 1) begin
 
-                vres[i] <= mb[i] - vpred[i];
-                hres[i] <= mb[i] - hpred[i];
-                vlres[i] <= mb[i] - vlpred[i];
-                vrres[i] <= mb[i] - vrpred[i];
-                hures[i] <= mb[i] - hupred[i];
-                hdres[i] <= mb[i] - hdpred[i];
-                ddlres[i] <= mb[i] - ddlpred[i];
-                ddrres[i] <= mb[i] - ddrpred[i];
+                vres[i] = mb[i] - vpred[i];
+                hres[i] = mb[i] - hpred[i];
+                vlres[i] = mb[i] - vlpred[i];
+                vrres[i] = mb[i] - vrpred[i];
+                hures[i] = mb[i] - hupred[i];
+                hdres[i] = mb[i] - hdpred[i];
+                ddlres[i] = mb[i] - ddlpred[i];
+                ddrres[i] = mb[i] - ddrpred[i];
 
             end
 

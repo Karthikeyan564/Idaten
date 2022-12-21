@@ -80,6 +80,7 @@ module intrapred #(
 	
 	// Residues
 	wire [7:0] allres_luma4x4 [7:0][15:0];
+	reg [7:0] allres_luma4x4_buf [7:0][15:0];
 //	0 -> wire [7:0] vres_luma4x4 [15:0];
 //	1 -> wire [7:0] hres_luma4x4 [15:0];
 //	2 -> wire [7:0] vlres_luma4x4 [15:0];
@@ -327,7 +328,7 @@ module intrapred #(
 		.reset(reset),
 		.enable(enabler[4]),
 		.sads(sads_luma4x4),
-		.allresidues(allres_luma4x4),
+		.allresidues(allres_luma4x4_buf),
 		.mbnumber(mbnumber),
 		.mode(mode_luma4x4),
 		.res(res_luma4x4));
@@ -370,8 +371,11 @@ module intrapred #(
             if (enabler != 5'b11111) 
                 enabler = (enabler<<1) | 5'd1;
         
-    always @ (posedge clk)
+    always @ (posedge clk) begin
         if (reset == 1)
             enabler = 5'd0;
+        if (enable)
+            allres_luma4x4_buf = allres_luma4x4;
+    end
 	
 endmodule
