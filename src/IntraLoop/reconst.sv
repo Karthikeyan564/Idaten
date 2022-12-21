@@ -15,11 +15,9 @@ module reconst #(
     output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0]);
         
     reg [7:0] residues [(LENGTH*WIDTH)-1:0];
-    reg signed [7:0] bufresidue [(MB_SIZE_L*MB_SIZE_W)-1:0];
     
     int resi;
     initial for (resi = 0; resi < (LENGTH*WIDTH); resi = resi + 1) residues[resi] = 8'd0;
-    initial for (resi = 0; resi < (MB_SIZE_L*MB_SIZE_W); resi = resi + 1) bufresidue[resi] = 8'd0;
     
     reg [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0];
     reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0];
@@ -70,7 +68,7 @@ module reconst #(
         endcase
 	end
     
-    always @ (negedge clk) begin
+    always @ (posedge clk) begin
         
         if (enable) begin
             row = (mbnumber%K1) << rowShift;
@@ -282,9 +280,6 @@ module reconst #(
                 end
                 
             endcase
-            
-            for (k = 0; k < (MB_SIZE_L*MB_SIZE_W); k = k + 1)
-                bufresidue[5'(k)] = residue[5'(k)];
                 
         end
     end
@@ -294,7 +289,7 @@ module reconst #(
 		if (enable) begin
 
             for (k = 0; k < (MB_SIZE_L*MB_SIZE_W); k = k + 1)
-                mb[5'(k)] = allpreds[mode][5'(k)] + bufresidue[5'(k)];
+                mb[5'(k)] = allpreds[mode][5'(k)] + residue[5'(k)];
                 
             for (i = 0; i < MB_SIZE_L; i = i +1) 
                 for (j = 0; j < MB_SIZE_W; j = j + 1) 
