@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module tb_intraloop #(
-    parameter WIDTH = 720,
-    parameter LENGTH = 1280
+    parameter WIDTH = 1280,
+    parameter LENGTH = 720
 );
     reg clk;
     reg reset;
@@ -37,7 +37,7 @@ module tb_intraloop #(
             
             mbnumber = {row, col};
             
-            if (row == LENGTH && col == WIDTH) begin
+            if (row > LENGTH) begin
                 enable = 0;
                 $stop;
             end
