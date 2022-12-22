@@ -6,7 +6,7 @@ module intrapred #(
 	input clk,
 	input reset,
 	input enable,
-	input [MB_NUMBER_BITS:0] mbnumber,
+	input [31:0] mbnumber,
 	output wire pipeline_full,
 	output reg [2:0] mode_luma4x4,
 	output reg [2:0] mode_luma16x16,

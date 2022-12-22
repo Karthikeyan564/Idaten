@@ -5,13 +5,13 @@ module intraloop #(
     input clk,
     input reset,
     input enable,
-    input [12:0] mbnumber,
+    input [31:0] mbnumber,
     output [7:0] mb [15:0]);
     
     wire intrapred_pipeline_full;
     wire tc_pipeline_full;
     
-    reg [12:0] mbnumber_buffer [10:0];
+    reg [31:0] mbnumber_buffer [10:0];
     reg [2:0] modebuffer_luma4x4 [4:0];
     
     wire [2:0] mode_luma4x4;
