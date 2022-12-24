@@ -13,6 +13,7 @@ module saver #(
     input signed [7:0] allresidues [(MB_SIZE_L == 4 ? 7 : 2):0][(MB_SIZE_L*MB_SIZE_W)-1:0],
     input [12:0] mbnumber,
     output reg [2:0] mode,
+    output reg [11:0] sum,
     output reg signed [7:0] res [MB_SIZE_L*MB_SIZE_W-1:0]);
 
     reg [4:0] i, j;
@@ -26,6 +27,13 @@ module saver #(
     reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
 	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
 	wire [BIT_LENGTH:0] rowShift, colShift;
+	
+	integer knt = 0;
+	reg [11:0] temp_sum;
+	
+	initial begin
+	   temp_sum = 0;
+	end
 		
 	case (MB_SIZE_L) 
        5'b10000:   assign rowShift = 4;
@@ -61,6 +69,30 @@ module saver #(
             for (i = 0; i < MB_SIZE_L; i = i +1) 
                 for (j = 0; j < MB_SIZE_W; j = j + 1) 
                     residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; 
+             
+           if(MB_SIZE_L == 4) begin 
+            if(knt < 16) begin
+                temp_sum = temp_sum + sads[min];
+                knt = knt + 1;
+                end
+            else begin
+                knt = 0;
+                sum = temp_sum;
+              end
+           end     
+           
+           if(MB_SIZE_L == 16) begin
+            if(knt<16) begin
+                knt = knt+1;
+            end
+            else begin
+                knt = 0;
+                sum = sads[i];
+            end
+                
+
+            sum = sads[i];
+           end  
                     
         end
 

@@ -109,7 +109,10 @@ module intrapred #(
 	wire [7:0] sads_luma16x16 [2:0];
 	wire [7:0] sads_chromab8x8 [2:0];
 	wire [7:0] sads_chromar8x8 [2:0];	
-		
+	
+	reg [11:0] sum_4x4;
+	reg [11:0] sum_16x16;
+    reg decision;
 	// Retrieve macroblock and neighbouring pixels		
 	// Luma 4x4
 	extractor #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_luma4x4 (
@@ -331,7 +334,8 @@ module intrapred #(
 		.allresidues(allres_luma4x4_buf),
 		.mbnumber(mbnumber),
 		.mode(mode_luma4x4),
-		.res(res_luma4x4));
+		.res(res_luma4x4),
+		.sum(sum_4x4));
 		
 	// Luma 16x16
 	saver #(.MB_SIZE_L(16), .MB_SIZE_W(16)) usaver_luma16x16 (
@@ -342,7 +346,8 @@ module intrapred #(
 		.allresidues(allres_luma16x16),
 		.mbnumber(mbnumber),
 		.mode(mode_luma16x16),
-		.res(res_luma16x16));
+		.res(res_luma16x16),
+		.sum(sum_16x16));
 		
 	// ChromaB 8x8
 	saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
@@ -365,7 +370,12 @@ module intrapred #(
 		.mbnumber(mbnumber),
 		.mode(mode_chromar8x8),
 		.res(res_chromar8x8));
-		
+    
+    intra_decision dec(.clk(clk),
+    .enable(enable), // enable has to be given based on clock signal, will what is aaved accordingly
+    .sum_4x4(sum_4x4),
+    .sum_16x16(sum_16x16),
+    .decision(decision));
     always @ (negedge clk) 
         if (enable == 1)
             if (enabler != 5'b11111) 
