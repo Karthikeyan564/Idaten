@@ -23,8 +23,6 @@ module intrapred #(
     
     // Enable Register
     reg [4:0] enabler = 5'd0;
-    reg flush_pipeline = 1'd0;
-    assign pipeline_full = enabler[3];
 //  0 -> Extractor
 //  1 -> Moder
 //  2 -> Reser
@@ -356,51 +354,47 @@ module intrapred #(
        .sads(sads_chromar8x8));
 		
 	// Make decision
-	// Luma 4x4
-	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
+	// Luma
+	decider #(.MB_SIZE_L(4), .MB_SIZE_W(4)) udecider_luma (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads(sads_luma4x4),
-		.allresidues(allres_luma4x4_buf),
-		.mbnumber(mbnumber),
-		.mode(mode_luma4x4),
-		.res(res_luma4x4),
-		.sum(sum_4x4));
+		.sads_luma4x4(sads_luma4x4),
+		.sads_luma16x16(sads_luma16x16),
+		.sads_chromab8x8(sads_chromab8x8),
+		.sads_chromar8x8(sads_chromar8x8),
+		.mode_luma4x4(mode_luma4x4),
+		.mode_luma16x16(mode_luma16x16),
+		.mode_chromab8x8(mode_chromab8x8),
+		.mode_chromar8x8(mode_chromar8x8));
 		
-	// Luma 16x16
-	saver #(.MB_SIZE_L(16), .MB_SIZE_W(16)) usaver_luma16x16 (
+    // ChromaB 8x8
+    decider udecider_chromab8x8 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads(sads_luma16x16),
-		.allresidues(allres_luma16x16),
-		.mbnumber(mbnumber),
-		.mode(mode_luma16x16),
-		.res(res_luma16x16),
-		.sum(sum_16x16));
+		.sads_luma4x4(sads_luma4x4),
+		.sads_luma16x16(sads_luma16x16),
+		.sads_chromab8x8(sads_chromab8x8),
+		.sads_chromar8x8(sads_chromar8x8),
+		.mode_luma4x4(mode_luma4x4),
+		.mode_luma16x16(mode_luma16x16),
+		.mode_chromab8x8(mode_chromab8x8),
+		.mode_chromar8x8(mode_chromar8x8));
 		
-	// ChromaB 8x8
-	saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
+    // ChromaR 8x8
+    decider udecider_chromar8x8 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads(sads_chromab8x8),
-		.allresidues(allres_chromab8x8),
-		.mbnumber(mbnumber),
-		.mode(mode_chromab8x8),
-		.res(res_chromab8x8));
-	   
-	// ChromaR 8x8
-	saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enabler[4]),
-		.sads(sads_chromar8x8),
-		.allresidues(allres_chromar8x8),
-		.mbnumber(mbnumber),
-		.mode(mode_chromar8x8),
-		.res(res_chromar8x8));
+		.sads_luma4x4(sads_luma4x4),
+		.sads_luma16x16(sads_luma16x16),
+		.sads_chromab8x8(sads_chromab8x8),
+		.sads_chromar8x8(sads_chromar8x8),
+		.mode_luma4x4(mode_luma4x4),
+		.mode_luma16x16(mode_luma16x16),
+		.mode_chromab8x8(mode_chromab8x8),
+		.mode_chromar8x8(mode_chromar8x8));
     
     always @ (negedge clk) 
         if (enable == 1)

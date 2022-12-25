@@ -9,26 +9,13 @@ module reconstructor #(
     input clk,
     input reset,
     input enable,
-    input [31:0] mbnumber,
+    input [31:0] mbnumber_luma4x4, mbnumber_luma16x16, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode,
+    input [2:0] mode_luma4x4, mode_luma16x16, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0],
-    output reg [7:0] mb [MB_SIZE_L*MB_SIZE_W-1:0]);
-        
-    reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0];
-    
-    int resi;
-    initial for (resi = 0; resi < (LENGTH*WIDTH); resi = resi + 1) reconstructed[resi] = 8'd0;
-    
-    reg [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0];
-    reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0];
-    
-    reg [7:0] A, B, C, D, E, F, G, H, I, J, K, L, M;
-    
-    reg signed [7:0] allpreds [(MB_SIZE_L == 4 ? 7 : 2):0][(MB_SIZE_L*MB_SIZE_W)-1:0];
-    
+    input signed [7:0] residue_luma4x4 [15:0], residue_luma16x16 [255:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0]);
+            
     reg [15:0] row, col;
-    reg [12:0] sum = 0;
-	reg [8:0] i, j, k;
     
     wire [7:0] toppixels_luma4x4 [7:0];
 	wire [7:0] toppixels_luma16x16 [15:0];
@@ -39,14 +26,19 @@ module reconstructor #(
 	wire [7:0] leftpixels_luma16x16 [15:0];
 	wire [7:0] leftpixels_chromab8x8 [7:0];
 	wire [7:0] leftpixels_chromar8x8 [7:0];
+	
+	wire [7:0] reconst_luma4x4 [15:0];
+	wire [7:0] reconst_luma16x16 [255:0];
+	wire [7:0] reconst_chromab8x8 [63:0];
+	wire [7:0] reconst_chromar8x8 [63:0];
     
-    // Retrieve neighbouring pixels		
+    // Retrieve Neighbouring Pixels		
 	// Luma 4x4
 	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
         .clk(clk),
         .reset(reset),
         .enable(enable),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_luma4x4),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4));
         
@@ -55,7 +47,7 @@ module reconstructor #(
 		.clk(clk),
 		.reset(reset),
 		.enable(enable),
-		.mbnumber(mbnumber),
+		.mbnumber(mbnumber_luma16x16),
 		.toppixels(toppixels_luma16x16),
 		.leftpixels(leftpixels_luma16x16));
 
@@ -64,7 +56,7 @@ module reconstructor #(
         .clk(clk),
         .reset(reset),
         .enable(enable),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
                
@@ -73,19 +65,86 @@ module reconstructor #(
         .clk(clk),
         .reset(reset),
         .enable(enable),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
-    
-    always @ (posedge clk) begin
+        
+    // Predict Modes and Reconstruct Block
+    // Luma 4x4
+    predadder #(.MB_SIZE_L(4), .MB_SIZE_W(4)) upredadder_luma4x4 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mode(mode_luma4x4),
+        .residue(residue_luma4x4),
+        .toppixels(toppixels_luma4x4),
+        .leftpixels(leftpixels_luma4x4),
+        .reconst(reconst_luma4x4)); 
+        
+    // Luma 16x16
+    predadder #(.MB_SIZE_L(16), .MB_SIZE_W(16)) upredadder_luma16x16 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mode(mode_luma16x16),
+        .residue(residue_luma16x16),
+        .toppixels(toppixels_luma16x16),
+        .leftpixels(leftpixels_luma16x16),
+        .reconst(reconst_luma16x16)); 
+        
+    // ChromaB 8x8
+    predadder #(.MB_SIZE_L(8), .MB_SIZE_W(8)) upredadder_chromab8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mode(mode_chromab8x8),
+        .residue(residue_chromab8x8),
+        .toppixels(toppixels_chromab8x8),
+        .leftpixels(leftpixels_chromab8x8),
+        .reconst(reconst_chromab8x8)); 
+        
+    // ChromaR 8x8
+    predadder #(.MB_SIZE_L(4), .MB_SIZE_W(4)) upredadder_chromar8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mode(mode_chromar8x8),
+        .residue(residue_chromar8x8),
+        .toppixels(toppixels_chromar8x8),
+        .leftpixels(leftpixels_chromar8x8),
+        .reconst(reconst_chromar8x8)); 
+        
+    // Save Reconstructed Block
+    // Luma 4x4
+	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mbnumber(mbnumber_luma4x4),
+        .reconst(reconst_luma4x4));
+        
+	// Luma 16x16
+	saver #(.MB_SIZE_L(16), .MB_SIZE_W(16)) usaver_luma16x16 (
+		.clk(clk),
+		.reset(reset),
+		.enable(enable),
+		.mbnumber(mbnumber_luma16x16),
+		.reconst(reconst_luma16x16));
 
-		if (enable) begin
-
-            for (k = 0; k < (MB_SIZE_L*MB_SIZE_W); k = k + 1)
-                mb[5'(k)] = allpreds[mode][5'(k)] + residue[5'(k)];
-                        
-        end
-
-	end
-    
+    // ChromaB 8x8
+    saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mbnumber(mbnumber_chromab8x8),
+        .reconst(reconst_chromab8x8));
+               
+    // ChromaR 8x8
+    saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enable),
+        .mbnumber(mbnumber_chromar8x8),
+        .reconst(reconst_chromar8x8));
+        
 endmodule

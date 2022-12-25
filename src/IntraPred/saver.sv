@@ -2,8 +2,8 @@
 
 module saver #(
     parameter BIT_LENGTH = 31,
-    parameter WIDTH = 720,
-    parameter LENGTH = 1280,
+    parameter WIDTH = 1280,
+    parameter LENGTH = 720,
     parameter MB_SIZE_L = 8,
     parameter MB_SIZE_W = 8)(
     input clk,
@@ -15,7 +15,10 @@ module saver #(
     reg [4:0] i, j;
     
     reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0];
-
+    
+    int resi;
+    initial for (resi = 0; resi < (LENGTH*WIDTH); resi = resi + 1) reconstructed[resi] = 8'd0;
+    
     reg [12:0] row;
     reg [12:0] col;
 
