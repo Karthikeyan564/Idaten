@@ -9,8 +9,11 @@ module intraloop #(
     output [7:0] mb [15:0]);
     
     wire intrapred_pipeline_full;
-    wire tc_pipeline_full;
-    
+    wire tc_pipeline_full_luma4x4;
+    wire tc_pipeline_full_luma16x16;
+    wire tc_pipeline_full_chromab8x8;
+    wire tc_pipeline_full_chromar8x8;
+
     reg [31:0] mbnumber_buffer [10:0];
     reg [2:0] modebuffer_luma4x4 [4:0];
     
@@ -47,10 +50,10 @@ module intraloop #(
         .enable(intrapred_pipeline_full),
         .QP(6'd2),
         .residuals(res_luma4x4),
-        .pipeline_full(tc_pipeline_full),
+        .pipeline_full(tc_pipeline_full_luma4x4),
         .processedres(processedres_luma4x4));
         
-    reconst ureconst (
+    reconstructor ureconstructor (
         .clk(clk),
         .reset(reset),
         .enable(tc_pipeline_full),

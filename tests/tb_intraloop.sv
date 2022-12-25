@@ -10,7 +10,7 @@ module tb_intraloop #(
     reg [31:0] mbnumber = 0;
     reg [15:0] row = 0, col = -4;
         
-    intraloop dut(.clk(clk), .reset(reset), .enable(enable), .mbnumber(mbnumber));
+    intraloop uintraloop (.clk(clk), .reset(reset), .enable(enable), .mbnumber(mbnumber));
         
     initial begin
     

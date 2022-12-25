@@ -7,6 +7,10 @@ module intrapred #(
 	input reset,
 	input enable,
 	input [31:0] mbnumber,
+    input [31:0] mbnumber_luma4x4,
+	input [31:0] mbnumber_luma16x16,
+	input [31:0] mbnumber_chromab8x8,
+	input [31:0] mbnumber_chromar8x8,
 	output wire pipeline_full,
 	output reg [2:0] mode_luma4x4,
 	output reg [2:0] mode_luma16x16,
@@ -19,6 +23,7 @@ module intrapred #(
     
     // Enable Register
     reg [4:0] enabler = 5'd0;
+    reg flush_pipeline = 1'd0;
     assign pipeline_full = enabler[3];
 //  0 -> Extractor
 //  1 -> Moder
@@ -110,49 +115,75 @@ module intrapred #(
 	wire [7:0] sads_chromab8x8 [2:0];
 	wire [7:0] sads_chromar8x8 [2:0];	
 	
-	reg [11:0] sum_4x4;
-	reg [11:0] sum_16x16;
-    reg decision;
-	// Retrieve macroblock and neighbouring pixels		
+	// Retrieve neighbouring pixels		
 	// Luma 4x4
-	extractor #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_luma4x4 (
+	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber),
-        .mb(mb_luma4x4),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4));
         
 	// Luma 16x16
-	extractor #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_luma16x16 (
+	extractor_np #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_np_luma16x16 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[0]),
 		.mbnumber(mbnumber),
-		.mb(mb_luma16x16),
 		.toppixels(toppixels_luma16x16),
 		.leftpixels(leftpixels_luma16x16));
 
     // ChromaB 8x8
-    extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromab8x8 (
+    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber),
-        .mb(mb_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
-        
+               
     // ChromaR 8x8
-    extractor #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_chromar8x8 (
+    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber),
-        .mb(mb_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
+        
+    // Retrieve Macroblock
+    // Luma 4x4
+    extractor_mb #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_mb_luma4x4 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enabler[0]),
+        .mbnumber(mbnumber),
+        .mb(mb_luma4x4));
+    
+    // Luma 16x16
+    extractor_mb #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_mb_luma16x16 (
+		.clk(clk),
+		.reset(reset),
+		.enable(enabler[0]),
+		.mbnumber(mbnumber),
+		.mb(mb_luma16x16));
+		
+    // ChromaB 8x8
+    extractor_mb #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromab8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enabler[0]),
+        .mbnumber(mbnumber),
+        .mb(mb_chromab8x8));
+    
+    // ChromaR 8x8  
+    extractor_mb #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromar8x8 (
+        .clk(clk),
+        .reset(reset),
+        .enable(enabler[0]),
+        .mbnumber(mbnumber),
+        .mb(mb_chromar8x8));
 
 	// Compute 8 modes
 	// Luma 4x4
@@ -324,7 +355,7 @@ module intrapred #(
        .dcres(allres_chromar8x8[2]),
        .sads(sads_chromar8x8));
 		
-	// Make decision and store residual
+	// Make decision
 	// Luma 4x4
 	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
 		.clk(clk),
@@ -371,11 +402,6 @@ module intrapred #(
 		.mode(mode_chromar8x8),
 		.res(res_chromar8x8));
     
-    intra_decision dec(.clk(clk),
-    .enable(enable), // enable has to be given based on clock signal, will what is aaved accordingly
-    .sum_4x4(sum_4x4),
-    .sum_16x16(sum_16x16),
-    .decision(decision));
     always @ (negedge clk) 
         if (enable == 1)
             if (enabler != 5'b11111) 

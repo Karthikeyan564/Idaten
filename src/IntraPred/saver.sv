@@ -9,87 +9,26 @@ module saver #(
     input clk,
     input reset,
     input enable,
-    input [7:0] sads [(MB_SIZE_L == 4 ? 7 : 2):0],
-    input signed [7:0] allresidues [(MB_SIZE_L == 4 ? 7 : 2):0][(MB_SIZE_L*MB_SIZE_W)-1:0],
-    input [12:0] mbnumber,
-    output reg [2:0] mode,
-    output reg [11:0] sum,
-    output reg signed [7:0] res [MB_SIZE_L*MB_SIZE_W-1:0]);
+    input [31:0] mbnumber,
+    input signed [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0]);
 
     reg [4:0] i, j;
     
-    reg [2:0] min;
-    reg [7:0] residues [LENGTH*WIDTH-1:0];
-    reg [2:0] modes [(LENGTH/MB_SIZE_L)*(WIDTH/MB_SIZE_W)-1:0];
+    reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0];
+
     reg [12:0] row;
     reg [12:0] col;
-    
-    reg [BIT_LENGTH:0] K1 = LENGTH/MB_SIZE_L;
-	reg [BIT_LENGTH:0] K2 = WIDTH/MB_SIZE_W;
-	wire [BIT_LENGTH:0] rowShift, colShift;
-	
-	integer knt = 0;
-	reg [11:0] temp_sum;
-	
-	initial begin
-	   temp_sum = 0;
-	end
-		
-	case (MB_SIZE_L) 
-       5'b10000:   assign rowShift = 4;
-       5'b01000:   assign rowShift = 3;
-       5'b00100:   assign rowShift = 2;
-       default:    assign rowShift = 4;
-	endcase
-	
-	case (MB_SIZE_W) 
-       5'b10000:   assign colShift = 4;
-       5'b01000:   assign colShift = 3;
-       5'b00100:   assign colShift = 2;
-       default:    assign colShift = 4;
-	endcase
 
     always @(posedge clk) begin
         
         if (enable) begin
 
-            min = 0;
-            
-            for (i = 1; i < (MB_SIZE_L == 4 ? 8 : 3); i = i + 1) 
-                if (sads[3'(i)] < sads[3'(min)]) min = 3'(i);
-
-            row = (mbnumber%K1) << rowShift;
-            col = (mbnumber%K2) << colShift;
-
-            modes[9'(mbnumber)] = min;
-            mode = min;
-            
-            res = allresidues[min];
+            row = mbnumber[31:16];
+            col = mbnumber[15:0];
 
             for (i = 0; i < MB_SIZE_L; i = i +1) 
                 for (j = 0; j < MB_SIZE_W; j = j + 1) 
-                    residues[((row+13'(i))*LENGTH)+(col+13'(j))] = res[(i*MB_SIZE_L)+j]; 
-             
-           if(MB_SIZE_L == 4) begin 
-            if(knt < 16) begin
-                temp_sum = temp_sum + sads[min];
-                knt = knt + 1;
-                end
-            else begin
-                knt = 0;
-                sum = temp_sum;
-              end
-           end     
-           
-           if(MB_SIZE_L == 16) begin
-            if(knt<16) begin
-                knt = knt+1;
-            end
-            else begin
-                knt = 0;
-                sum = sads[i];
-            end
-           end  
+                    reconstructed[((row+13'(i))*LENGTH)+(col+13'(j))] = reconst[(i*MB_SIZE_L)+j]; 
                     
         end
 
