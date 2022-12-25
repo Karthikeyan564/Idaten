@@ -56,12 +56,10 @@ module quant_4x4 #(
             begin
                 intermediate = (-transformed[i]);
                 wasnegative = 1;
-                $display("%d is negative, so we changed it to %d", transformed[i], intermediate);
             end
             else begin
                 intermediate = transformed[i];
                 wasnegative = 0;
-                $display("%d is not negative, so we copied it to %d", transformed[i], intermediate);
             end
             
             quantized[i] = (((intermediate * multfactor) + finter) >> (QP_BY_6+15));

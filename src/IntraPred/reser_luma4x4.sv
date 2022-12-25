@@ -22,7 +22,7 @@ module reser_luma4x4 (
     output reg signed [7:0] ddlres [15:0],
 	output reg signed [7:0] ddrres [15:0]);
 	
-	integer i;
+	reg [4:0] i;
 
     always @(posedge clk) begin
 

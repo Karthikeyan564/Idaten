@@ -89,9 +89,6 @@ module saver #(
                 knt = 0;
                 sum = sads[i];
             end
-                
-
-            sum = sads[i];
            end  
                     
         end
