@@ -6,20 +6,10 @@ module intrapred #(
 	input clk,
 	input reset,
 	input enable,
-	input [31:0] mbnumber,
-    input [31:0] mbnumber_luma4x4,
-	input [31:0] mbnumber_luma16x16,
-	input [31:0] mbnumber_chromab8x8,
-	input [31:0] mbnumber_chromar8x8,
-	output wire pipeline_full,
-	output reg [2:0] mode_luma4x4,
-	output reg [2:0] mode_luma16x16,
-	output reg [2:0] mode_chromab8x8,
-	output reg [2:0] mode_chromar8x8,
-	output signed [7:0] res_luma4x4 [15:0],
-	output signed [7:0] res_luma16x16 [255:0],
-	output signed [7:0] res_chromab8x8 [63:0],
-	output signed [7:0] res_chromar8x8 [63:0]);
+    input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
+	output reg [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
+	output signed [7:0] res_luma4x4 [15:0], res_chromab8x8 [63:0], res_chromar8x8 [63:0],
+    output wire pipeline_full);
     
     // Enable Register
     reg [4:0] enabler = 5'd0;
@@ -31,17 +21,14 @@ module intrapred #(
     
 	// Inputs
 	wire [7:0] mb_luma4x4 [15:0];
-	wire [7:0] mb_luma16x16 [255:0];
 	wire [7:0] mb_chromab8x8 [63:0];
 	wire [7:0] mb_chromar8x8 [63:0];
 	
 	wire [7:0] toppixels_luma4x4 [7:0];
-	wire [7:0] toppixels_luma16x16 [15:0];
 	wire [7:0] toppixels_chromab8x8 [7:0];
 	wire [7:0] toppixels_chromar8x8 [7:0];
 	
 	wire [7:0] leftpixels_luma4x4 [4:0];
-	wire [7:0] leftpixels_luma16x16 [15:0];
 	wire [7:0] leftpixels_chromab8x8 [7:0];
 	wire [7:0] leftpixels_chromar8x8 [7:0];
 
@@ -70,10 +57,6 @@ module intrapred #(
 	wire [7:0] ddlpred_luma4x4 [15:0];
 	wire [7:0] ddrpred_luma4x4 [15:0];
 	
-	wire [7:0] vpred_luma16x16 [255:0];
-	wire [7:0] hpred_luma16x16 [255:0];
-	wire [7:0] dcpred_luma16x16 [255:0];
-	
 	wire [7:0] vpred_chromab8x8 [63:0];
 	wire [7:0] hpred_chromab8x8 [63:0];
 	wire [7:0] dcpred_chromab8x8 [63:0];
@@ -93,11 +76,6 @@ module intrapred #(
 //	6 -> wire [7:0] ddlres_luma4x4 [15:0];
 //	7 -> wire [7:0] ddrres_luma4x4 [15:0];
 	
-	wire signed [7:0] allres_luma16x16 [2:0][255:0];
-//  0 -> wire [7:0] vres_luma16x16 [255:0];
-//  1 -> wire [7:0] hres_luma16x16 [255:0];
-//  2 -> wire [7:0] dcres_luma16x16 [255:0];
-    
     wire signed [7:0] allres_chromab8x8 [2:0][63:0];
 //  0 -> wire [7:0] vres_chromab8x8 [63:0];
 //  1 -> wire [7:0] hres_chromab8x8 [63:0];
@@ -109,7 +87,6 @@ module intrapred #(
 
 	// SADs	
 	wire [7:0] sads_luma4x4 [7:0];
-	wire [7:0] sads_luma16x16 [2:0];
 	wire [7:0] sads_chromab8x8 [2:0];
 	wire [7:0] sads_chromar8x8 [2:0];	
 	
@@ -119,25 +96,16 @@ module intrapred #(
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_luma4x4),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4));
-        
-	// Luma 16x16
-	extractor_np #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_np_luma16x16 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enabler[0]),
-		.mbnumber(mbnumber),
-		.toppixels(toppixels_luma16x16),
-		.leftpixels(leftpixels_luma16x16));
 
     // ChromaB 8x8
     extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
                
@@ -146,7 +114,7 @@ module intrapred #(
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
         
@@ -156,23 +124,15 @@ module intrapred #(
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_luma4x4),
         .mb(mb_luma4x4));
-    
-    // Luma 16x16
-    extractor_mb #(.MB_SIZE_L(16), .MB_SIZE_W(16)) uextractor_mb_luma16x16 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enabler[0]),
-		.mbnumber(mbnumber),
-		.mb(mb_luma16x16));
 		
     // ChromaB 8x8
     extractor_mb #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromab8x8),
         .mb(mb_chromab8x8));
     
     // ChromaR 8x8  
@@ -180,7 +140,7 @@ module intrapred #(
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
-        .mbnumber(mbnumber),
+        .mbnumber(mbnumber_chromar8x8),
         .mb(mb_chromar8x8));
 
 	// Compute 8 modes
@@ -210,18 +170,7 @@ module intrapred #(
 		.hdpred(hdpred_luma4x4),
 		.ddlpred(ddlpred_luma4x4),
 		.ddrpred(ddrpred_luma4x4));
-
-    // Luma 16x16
-    moder_luma16x16 umoder_luma16x16 (
-        .clk(clk),
-        .reset(reset),
-        .enable(enabler[1]),
-        .toppixels(toppixels_luma16x16),
-        .leftpixels(leftpixels_luma16x16),
-        .vpred(vpred_luma16x16),
-        .hpred(hpred_luma16x16),
-        .dcpred(dcpred_luma16x16));
-        
+		
     // ChromaB 8x8
     moder_chroma8x8 umoder_chromab8x8 (
         .clk(clk),
@@ -267,19 +216,6 @@ module intrapred #(
 		.hdres(allres_luma4x4[5]),
 		.ddlres(allres_luma4x4[6]),
 		.ddrres(allres_luma4x4[7]));
-
-    // Luma 16x16
-    reser_luma16x16 ureser_luma16x16 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enabler[2]),
-		.mb(mb_luma16x16),
-		.vpred(vpred_luma16x16),
-		.hpred(hpred_luma16x16),
-		.dcpred(dcpred_luma16x16),
-		.vres(allres_luma16x16[0]),
-		.hres(allres_luma16x16[1]),
-		.dcres(allres_luma16x16[2]));
 		
     // ChromaB 8x8
     reser_chroma8x8 ureser_chromab8x8 (
@@ -322,16 +258,6 @@ module intrapred #(
 		.ddlres(allres_luma4x4[6]),
 		.ddrres(allres_luma4x4[7]),
 		.sads(sads_luma4x4));
-
-    // Luma 16x16
-    sader_luma16x16 usader_luma16x16 (
-		.clk(clk),
-		.reset(reset),
-		.enable(enabler[3]),
-		.vres(allres_luma16x16[0]),
-		.hres(allres_luma16x16[1]),
-		.dcres(allres_luma16x16[2]),
-		.sads(sads_luma16x16));
 		
 	// ChromaB 8x8
 	sader_chroma8x8 usader_chromab8x8 (
@@ -355,46 +281,28 @@ module intrapred #(
 		
 	// Make decision
 	// Luma
-	decider #(.MB_SIZE_L(4), .MB_SIZE_W(4)) udecider_luma (
+	decider #(.MB_SIZE_L(4), .MB_SIZE_W(4)) udecider_luma4x4 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads_luma4x4(sads_luma4x4),
-		.sads_luma16x16(sads_luma16x16),
-		.sads_chromab8x8(sads_chromab8x8),
-		.sads_chromar8x8(sads_chromar8x8),
-		.mode_luma4x4(mode_luma4x4),
-		.mode_luma16x16(mode_luma16x16),
-		.mode_chromab8x8(mode_chromab8x8),
-		.mode_chromar8x8(mode_chromar8x8));
+		.sads(sads_luma4x4),
+		.mode(mode_luma4x4));
 		
     // ChromaB 8x8
     decider udecider_chromab8x8 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads_luma4x4(sads_luma4x4),
-		.sads_luma16x16(sads_luma16x16),
-		.sads_chromab8x8(sads_chromab8x8),
-		.sads_chromar8x8(sads_chromar8x8),
-		.mode_luma4x4(mode_luma4x4),
-		.mode_luma16x16(mode_luma16x16),
-		.mode_chromab8x8(mode_chromab8x8),
-		.mode_chromar8x8(mode_chromar8x8));
+		.sads(sads_chromab8x8),
+		.mode(mode_chromab8x8));
 		
     // ChromaR 8x8
     decider udecider_chromar8x8 (
 		.clk(clk),
 		.reset(reset),
 		.enable(enabler[4]),
-		.sads_luma4x4(sads_luma4x4),
-		.sads_luma16x16(sads_luma16x16),
-		.sads_chromab8x8(sads_chromab8x8),
-		.sads_chromar8x8(sads_chromar8x8),
-		.mode_luma4x4(mode_luma4x4),
-		.mode_luma16x16(mode_luma16x16),
-		.mode_chromab8x8(mode_chromab8x8),
-		.mode_chromar8x8(mode_chromar8x8));
+		.sads(sads_chromar8x8),
+		.mod(mode_chromar8x8));
     
     always @ (negedge clk) 
         if (enable == 1)

@@ -10,7 +10,6 @@ module intraloop #(
     
     wire intrapred_pipeline_full;
     wire tc_pipeline_full_luma4x4;
-    wire tc_pipeline_full_luma16x16;
     wire tc_pipeline_full_chromab8x8;
     wire tc_pipeline_full_chromar8x8;
 
@@ -18,12 +17,10 @@ module intraloop #(
     reg [2:0] modebuffer_luma4x4 [4:0];
     
     wire [2:0] mode_luma4x4;
-	wire [2:0] mode_luma16x16;
 	wire [2:0] mode_chromab8x8;
 	wire [2:0] mode_chromar8x8;
 	
 	wire signed [7:0] res_luma4x4 [15:0];
-	wire signed [7:0] res_luma16x16 [255:0];
 	wire signed [7:0] res_chromab8x8 [63:0];
 	wire signed [7:0] res_chromar8x8 [63:0];
     
@@ -33,16 +30,16 @@ module intraloop #(
         .clk(clk),
         .reset(reset),
         .enable(enable),
-        .mbnumber(mbnumber),
-        .pipeline_full(intrapred_pipeline_full),
+        .mbnumber_luma4x4(mbnumber),
+        .mbnumber_chromab8x8(mbnumber),
+        .mbnumber_chromar8x8(mbnumber),
         .mode_luma4x4(mode_luma4x4),
-        .mode_luma16x16(mode_luma16x16),
         .mode_chromab8x8(mode_chromab8x8),
         .mode_chromar8x8(mode_chromar8x8),
         .res_luma4x4(res_luma4x4),
-        .res_luma16x16(res_luma16x16),
         .res_chromab8x8(res_chromab8x8),
-        .res_chromar8x8(res_chromar8x8));
+        .res_chromar8x8(res_chromar8x8),
+        .pipeline_full(intrapred_pipeline_full));
         
     transformcoder utransformcoder (
         .clk(clk),
