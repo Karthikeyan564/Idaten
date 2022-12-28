@@ -11,7 +11,8 @@ module reconstructor #(
     input enable,
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
-    input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0]);
+    input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
+    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
             
     reg [15:0] row, col;
     
@@ -96,7 +97,8 @@ module reconstructor #(
         .reset(reset),
         .enable(enable),
         .mbnumber(mbnumber_luma4x4),
-        .reconst(reconst_luma4x4));
+        .reconst(reconst_luma4x4),
+        .fb(fb_luma4x4));
         
     // ChromaB 8x8
     saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
@@ -104,7 +106,8 @@ module reconstructor #(
         .reset(reset),
         .enable(enable),
         .mbnumber(mbnumber_chromab8x8),
-        .reconst(reconst_chromab8x8));
+        .reconst(reconst_chromab8x8),
+        .fb(fb_chromab8x8));
                
     // ChromaR 8x8
     saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
@@ -112,6 +115,7 @@ module reconstructor #(
         .reset(reset),
         .enable(enable),
         .mbnumber(mbnumber_chromar8x8),
-        .reconst(reconst_chromar8x8));
+        .reconst(reconst_chromar8x8),
+        .fb(fb_chromar8x8));
         
 endmodule

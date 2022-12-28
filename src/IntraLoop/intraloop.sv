@@ -1,20 +1,16 @@
 `timescale 1ns / 1ps
 
-module intraloop #(
-    parameter BIT_LENGTH = 31)(
+module intraloop (
     input clk,
     input reset,
     input enable,
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
-    output [7:0] mb [15:0], mb_chromab8x8 [63:0], mb_chromar8x8 [63:0]);
+    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
     
     wire intrapred_pipeline_full;
     wire tc_pipeline_full_luma4x4;
     wire tc_pipeline_full_chromab8x8;
     wire tc_pipeline_full_chromar8x8;
-
-    reg [31:0] mbnumber_buffer [10:0];
-    reg [2:0] modebuffer_luma4x4 [4:0];
     
     wire [2:0] mode_luma4x4;
 	wire [2:0] mode_chromab8x8;
@@ -25,6 +21,8 @@ module intraloop #(
 	wire signed [7:0] res_chromar8x8 [63:0];
     
     wire signed [7:0] processedres_luma4x4 [15:0];
+    wire signed [7:0] processedres_chromab8x8 [63:0];
+    wire signed [7:0] processedres_chromar8x8 [63:0];
     
     intrapred uintrapred (
         .clk(clk),
@@ -54,33 +52,17 @@ module intraloop #(
         .clk(clk),
         .reset(reset),
         .enable(tc_pipeline_full),
-        .mbnumber(mbnumber_buffer[8]),
-        .mode(modebuffer_luma4x4[3]),
-        .residue(processedres_luma4x4),
-        .mb(mb));
-    
-    always @ (posedge clk) begin
-        
-        if (enable) begin
-            mbnumber_buffer[10] = mbnumber_buffer[9];
-            mbnumber_buffer[9] = mbnumber_buffer[8];
-            mbnumber_buffer[8] = mbnumber_buffer[7];
-            mbnumber_buffer[7] = mbnumber_buffer[6];
-            mbnumber_buffer[6] = mbnumber_buffer[5];
-            mbnumber_buffer[5] = mbnumber_buffer[4];
-            mbnumber_buffer[4] = mbnumber_buffer[3];
-            mbnumber_buffer[3] = mbnumber_buffer[2];
-            mbnumber_buffer[2] = mbnumber_buffer[1];
-            mbnumber_buffer[1] = mbnumber_buffer[0];
-            mbnumber_buffer[0] = mbnumber;
-            
-            modebuffer_luma4x4[4] = modebuffer_luma4x4[3];
-            modebuffer_luma4x4[3] = modebuffer_luma4x4[2];
-            modebuffer_luma4x4[2] = modebuffer_luma4x4[1];
-            modebuffer_luma4x4[1] = modebuffer_luma4x4[0];
-            modebuffer_luma4x4[0] = mode_luma4x4;
-        end
-    
-    end
+        .mbnumber_luma4x4(mbnumber_luma4x4),
+        .mbnumber_chromab8x8(mbnumber_chromab8x8),
+        .mbnumber_chromar8x8(mbnumber_chromar8x8),
+        .mode_luma4x4(mode_luma4x4),
+        .mode_chromab8x8(mode_chromab8x8),
+        .mode_chromar8x8(mode_chromar8x8),
+        .residue_luma4x4(processedres_luma4x4),
+        .residue_chromab8x8(processedres_chromab8x8),
+        .residue_chromar8x8(processedres_chromar8x8),
+        .fb_luma4x4(fb_luma4x4),
+        .fb_chromab8x8(fb_chromab8x8),
+        .fb_chromar8x8(fb_chromar8x8));
     
 endmodule
