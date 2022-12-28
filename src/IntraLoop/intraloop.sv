@@ -5,8 +5,8 @@ module intraloop #(
     input clk,
     input reset,
     input enable,
-    input [31:0] mbnumber,
-    output [7:0] mb [15:0]);
+    input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
+    output [7:0] mb [15:0], mb_chromab8x8 [63:0], mb_chromar8x8 [63:0]);
     
     wire intrapred_pipeline_full;
     wire tc_pipeline_full_luma4x4;
@@ -30,9 +30,9 @@ module intraloop #(
         .clk(clk),
         .reset(reset),
         .enable(enable),
-        .mbnumber_luma4x4(mbnumber),
-        .mbnumber_chromab8x8(mbnumber),
-        .mbnumber_chromar8x8(mbnumber),
+        .mbnumber_luma4x4(mbnumber_luma4x4),
+        .mbnumber_chromab8x8(mbnumber_chromab8x8),
+        .mbnumber_chromar8x8(mbnumber_chromar8x8),
         .mode_luma4x4(mode_luma4x4),
         .mode_chromab8x8(mode_chromab8x8),
         .mode_chromar8x8(mode_chromar8x8),
