@@ -8,32 +8,42 @@ module intraloop #(
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
     
-    genvar i;
+    // Enable Register
+    reg [9:0] enabler = 10'd0;
+//  0 -> Extractor NP
+//  1 -> Extractor MB and Moder
+//  2 -> Reser
+//  3 -> Sader
+//  4 -> Decider
+//  5 -> Forward Transform
+//  6 -> Forward Quantize
+//  7 -> Inverse Quantize
+//  8 -> Inverse Transform
+//  0 -> Extractor NP
+//  10 -> PredAdder
+//  11 -> Saver
     
-    wire intrapred_pipeline_full;
-    wire tc_pipeline_full_luma4x4;
-    wire tc_pipeline_full_chromab8x8 [0:3];
-    wire tc_pipeline_full_chromar8x8 [0:3];
+    genvar i;
     
     wire [2:0] mode_luma4x4;
 	wire [2:0] mode_chromab8x8;
 	wire [2:0] mode_chromar8x8;
 	
-	wire signed [7:0] res_luma4x4 [15:0];
-	wire signed [7:0] res_chromab8x8 [63:0];
-	wire signed [7:0] res_chromar8x8 [63:0];
+	wire signed [7:0] res_luma4x4 [0:15];
+	wire signed [7:0] res_chromab8x8 [0:63];
+	wire signed [7:0] res_chromar8x8 [0:63];
 	
 	reg signed [7:0] res_chromab8x8_quadrants [3:0][15:0];
 	reg signed [7:0] res_chromar8x8_quadrants [3:0][15:0];
     
-    wire signed [7:0] processedres_luma4x4 [15:0];
-    reg signed [7:0] processedres_chromab8x8 [63:0];
-    reg signed [7:0] processedres_chromar8x8 [63:0];
+    wire signed [7:0] processedres_luma4x4 [0:15];
+    reg signed [7:0] processedres_chromab8x8 [0:63];
+    reg signed [7:0] processedres_chromar8x8 [0:63];
     
     wire signed [7:0] processedres_chromab8x8_quadrants [3:0][15:0];
     wire signed [7:0] processedres_chromar8x8_quadrants [3:0][15:0];
     
-    always @ (posedge clk) begin
+    always @ (negedge clk) begin
     
         // Forward map Chroma components
 	   res_chromab8x8_quadrants[0] <= {res_chromab8x8[0:3], res_chromab8x8[8:11], res_chromab8x8[16:19], res_chromab8x8[24:27]};
@@ -92,7 +102,7 @@ module intraloop #(
     intrapred uintrapred (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enabler(enabler[3:0]),
         .mbnumber_luma4x4(mbnumber_luma4x4),
         .mbnumber_chromab8x8(mbnumber_chromab8x8),
         .mbnumber_chromar8x8(mbnumber_chromar8x8),
@@ -101,16 +111,14 @@ module intraloop #(
         .mode_chromar8x8(mode_chromar8x8),
         .res_luma4x4(res_luma4x4),
         .res_chromab8x8(res_chromab8x8),
-        .res_chromar8x8(res_chromar8x8),
-        .pipeline_full(intrapred_pipeline_full));
+        .res_chromar8x8(res_chromar8x8));
         
     transformcoder utransformcoder_intra (
         .clk(clk),
         .reset(reset),
-        .enable(intrapred_pipeline_full),
+        .enabler(enabler[7:4]),
         .QP(QP),
         .residuals(res_luma4x4),
-        .pipeline_full(tc_pipeline_full_luma4x4),
         .processedres(processedres_luma4x4));
         
     generate
@@ -120,10 +128,9 @@ module intraloop #(
             transformcoder stage (
                 .clk(clk),
                 .reset(reset),
-                .enable(intrapred_pipeline_full),
+                .enabler(enabler[7:4]),
                 .QP(QP),
                 .residuals(res_chromab8x8_quadrants[i]),
-                .pipeline_full(tc_pipeline_full_chromab8x8[i]),
                 .processedres(processedres_chromab8x8_quadrants[i]));
         end
         
@@ -132,10 +139,9 @@ module intraloop #(
             transformcoder stage (
                 .clk(clk),
                 .reset(reset),
-                .enable(intrapred_pipeline_full),
+                .enabler(enabler[7:4]),
                 .QP(QP),
                 .residuals(res_chromar8x8_quadrants[i]),
-                .pipeline_full(tc_pipeline_full_chromar8x8[i]),
                 .processedres(processedres_chromar8x8_quadrants[i]));
         end
         
@@ -144,7 +150,7 @@ module intraloop #(
     reconstructor ureconstructor (
         .clk(clk),
         .reset(reset),
-        .enable(tc_pipeline_full),
+        .enabler(enabler[9:7]),
         .mbnumber_luma4x4(mbnumber_luma4x4),
         .mbnumber_chromab8x8(mbnumber_chromab8x8),
         .mbnumber_chromar8x8(mbnumber_chromar8x8),
@@ -157,5 +163,13 @@ module intraloop #(
         .fb_luma4x4(fb_luma4x4),
         .fb_chromab8x8(fb_chromab8x8),
         .fb_chromar8x8(fb_chromar8x8));
+    
+    always @ (negedge clk) begin
+        if (reset == 1)
+            enabler = 12'd0;
+        else begin
+            enabler = (enabler<<1) | enable;
+        end
+    end
     
 endmodule

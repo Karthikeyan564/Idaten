@@ -33,6 +33,22 @@ module encoder_intra (
         .fb_chromab8x8(fb_chromab8x8_e2),
         .fb_chromar8x8(fb_chromar8x8_e2));
     
+    initial begin
+        first_luma4x4_e1 = 1;
+        first_chromab8x8_e1 = 1;
+        first_chromar8x8_e1 = 1;
+        first_luma4x4_e2 = 1;
+        first_chromab8x8_e2 = 1;
+        first_chromar8x8_e2 = 1;
+        
+        mbnumber_luma4x4_e1 = 32'd0;
+        mbnumber_luma4x4_e2 = {16'd0, 16'd4};
+        mbnumber_chromab8x8_e1 = 32'd0;
+        mbnumber_chromab8x8_e2 = {16'd0, 16'd8};
+        mbnumber_chromar8x8_e1 = 32'd0;
+        mbnumber_chromar8x8_e2 = {16'd0, 16'd8};
+    end
+    
     always @ (posedge clk)
     
         if (reset) begin

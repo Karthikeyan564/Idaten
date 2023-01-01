@@ -10,7 +10,7 @@ module moder_chroma8x8(
     output reg [7:0] hpred [63:0],
     output reg [7:0] dcpred [63:0]);
     
-    integer i,j,k;
+    integer i,j;
     reg [12:0] sum = 0;
     
     always @(posedge clk) begin

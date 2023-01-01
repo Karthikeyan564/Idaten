@@ -8,7 +8,7 @@ module decider #(
     input clk,
     input reset,
     input enable,
-    input [7:0] sads [(MB_SIZE_L*MB_SIZE_W)-1:0],
+    input [7:0] sads [(MB_SIZE_L == 8 ? 2 : 7):0],
     output reg [2:0] mode);
     
     // Counters
@@ -25,6 +25,8 @@ module decider #(
     
              for (i = 1; i < MB_SIZE_L; i = i + 1) 
                  if (sads[i] < sads[min]) min = i;
+                 
+             mode = min;
                             
         end    
     

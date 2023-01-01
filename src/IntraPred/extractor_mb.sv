@@ -19,7 +19,7 @@ module extractor_mb #(
 	end
 
     reg [15:0] row, col;
-	reg [7:0] i, j, k;
+	reg [7:0] j, k;
     
     always @ (posedge clk) begin
 

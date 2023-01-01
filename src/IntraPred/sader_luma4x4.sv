@@ -12,7 +12,11 @@ module sader_luma4x4 (
 	input signed [7:0] hdres [15:0],
     input signed [7:0] ddlres [15:0],
 	input signed [7:0] ddrres [15:0],
-    output reg [7:0] sads [7:0] );
+	output reg [2:0] mode,
+	output reg signed [7:0] res [15:0]);
+	
+    reg [7:0] sads [7:0];
+    reg [2:0] min;
 
     reg signed [7:0] vsamp;
     reg signed [7:0] hsamp;
@@ -25,7 +29,7 @@ module sader_luma4x4 (
     
     integer i;
     integer j;
-
+    
     always @(posedge clk) begin
 
         if (enable) begin
@@ -46,6 +50,25 @@ module sader_luma4x4 (
                 ddrsamp = ddrres[i]; ddrsamp = ddrsamp < 0 ? ddrsamp * -1 : ddrsamp; sads[7] = sads[7] + ddrsamp;
 
             end
+            
+            min = 0;
+    
+            for (i = 1; i < 8; i = i + 1) 
+                if (sads[i] < sads[min]) min = i;
+                 
+            mode = min;
+
+            case (mode)
+                3'd0 : res = vres;
+                3'd1 : res = hres;
+                3'd2 : res = vlres;
+                3'd3 : res = vrres;
+                3'd4 : res = hures;
+                3'd5 : res = hdres;
+                3'd6 : res = ddlres;
+                3'd7 : res = ddrres;
+                default : res = vres;
+            endcase
 
         end
 

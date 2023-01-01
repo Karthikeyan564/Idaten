@@ -12,7 +12,7 @@ module saver #(
     input [31:0] mbnumber,
     input signed [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0],
     output reg fb);
-
+    
     reg [4:0] i, j;
     
     reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0];

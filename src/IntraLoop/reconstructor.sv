@@ -8,12 +8,12 @@ module reconstructor #(
     parameter MB_SIZE_W = 4)(
     input clk,
     input reset,
-    input enable,
+    input [2:0] enabler,
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
     output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
-            
+    
     reg [15:0] row, col;
     
     wire [7:0] toppixels_luma4x4 [7:0];
@@ -33,7 +33,7 @@ module reconstructor #(
 	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber_luma4x4),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4));
@@ -42,7 +42,7 @@ module reconstructor #(
     extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
@@ -51,7 +51,7 @@ module reconstructor #(
     extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[0]),
         .mbnumber(mbnumber_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
@@ -61,7 +61,7 @@ module reconstructor #(
     predadder #(.MB_SIZE_L(4), .MB_SIZE_W(4)) upredadder_luma4x4 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .mode(mode_luma4x4),
         .residue(residue_luma4x4),
         .toppixels(toppixels_luma4x4),
@@ -72,7 +72,7 @@ module reconstructor #(
     predadder #(.MB_SIZE_L(8), .MB_SIZE_W(8)) upredadder_chromab8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .mode(mode_chromab8x8),
         .residue(residue_chromab8x8),
         .toppixels(toppixels_chromab8x8),
@@ -80,10 +80,10 @@ module reconstructor #(
         .reconst(reconst_chromab8x8)); 
         
     // ChromaR 8x8
-    predadder #(.MB_SIZE_L(4), .MB_SIZE_W(4)) upredadder_chromar8x8 (
+    predadder #(.MB_SIZE_L(8), .MB_SIZE_W(8)) upredadder_chromar8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[1]),
         .mode(mode_chromar8x8),
         .residue(residue_chromar8x8),
         .toppixels(toppixels_chromar8x8),
@@ -95,7 +95,7 @@ module reconstructor #(
 	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[2]),
         .mbnumber(mbnumber_luma4x4),
         .reconst(reconst_luma4x4),
         .fb(fb_luma4x4));
@@ -104,7 +104,7 @@ module reconstructor #(
     saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[2]),
         .mbnumber(mbnumber_chromab8x8),
         .reconst(reconst_chromab8x8),
         .fb(fb_chromab8x8));
@@ -113,7 +113,7 @@ module reconstructor #(
     saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
         .clk(clk),
         .reset(reset),
-        .enable(enable),
+        .enable(enabler[2]),
         .mbnumber(mbnumber_chromar8x8),
         .reconst(reconst_chromar8x8),
         .fb(fb_chromar8x8));

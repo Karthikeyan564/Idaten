@@ -4,19 +4,10 @@ module transformcoder #(
     parameter BIT_LENGTH = 31)(
     input clk,
     input reset,
-    input enable,
+    input [3:0] enabler,
     input [5:0] QP,
     input [7:0] residuals [15:0],
-    output pipeline_full,
-    output reg signed[7:0] processedres [15:0]);
-    
-    // Enable Register
-    reg [4:0] enabler = 5'd0;
-    assign pipeline_full = enabler[4];
-//  0 -> Forward Transform
-//  1 -> Forward Quantize
-//  2 -> Inverse Quantize
-//  3 -> Inverse Transform
+    output reg signed [7:0] processedres [15:0]);
 
     wire signed [BIT_LENGTH:0] res2tran [15:0];
     wire signed [BIT_LENGTH:0] tran2quant [15:0];
@@ -94,15 +85,6 @@ module transformcoder #(
         .enable(enabler[3]),
         .reset(reset),
         .transformed(quant2tran),
-        .residuals(processedres));
-        
-    always @ (negedge clk) 
-        if (enable == 1)
-            if (enabler != 5'b11111) 
-                enabler = (enabler<<1) | 5'd1;
+        .residuals(processedres));        
 
-    always @ (posedge clk)
-        if (reset == 1)
-            enabler = 5'd0;
-    
 endmodule

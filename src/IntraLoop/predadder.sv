@@ -268,7 +268,7 @@ module predadder #(
             endcase
 
             for (k = 0; k < (MB_SIZE_L*MB_SIZE_W); k = k + 1)
-                reconst[5'(k)] = pred[5'(k)] + residue[5'(k)];
+                reconst[6'(k)] = pred[6'(k)] + residue[6'(k)];
 
         end
 
