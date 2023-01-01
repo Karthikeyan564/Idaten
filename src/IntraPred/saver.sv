@@ -10,7 +10,8 @@ module saver #(
     input reset,
     input enable,
     input [31:0] mbnumber,
-    input signed [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0]);
+    input signed [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0],
+    output reg fb);
 
     reg [4:0] i, j;
     
@@ -32,9 +33,13 @@ module saver #(
             for (i = 0; i < MB_SIZE_L; i = i +1) 
                 for (j = 0; j < MB_SIZE_W; j = j + 1) 
                     reconstructed[((row+13'(i))*LENGTH)+(col+13'(j))] = reconst[(i*MB_SIZE_L)+j]; 
+            
+            fb = 1;
                     
         end
 
     end
+    
+    always @ (negedge clk) if (fb) fb = 0;
 
 endmodule
