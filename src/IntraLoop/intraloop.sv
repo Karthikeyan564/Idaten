@@ -13,6 +13,7 @@ module intraloop #(
     
     // Enable Register
     reg [9:0] enabler = 10'd0;
+    reg lastbit, first;
 //  0 -> Extractor NP
 //  1 -> Extractor MB and Moder
 //  2 -> Reser
@@ -21,10 +22,14 @@ module intraloop #(
 //  5 -> Forward Transform
 //  6 -> Forward Quantize
 //  7 -> Inverse Quantize
-//  8 -> Inverse Transform
-//  0 -> Extractor NP
-//  10 -> PredAdder
-//  11 -> Saver
+//  8 -> Inverse Transform and Extractor NP
+//  9 -> PredAdder
+//  10-> Saver
+
+    initial begin
+        first = 1;
+        lastbit = 0;
+    end
     
     genvar i;
     
@@ -174,11 +179,24 @@ module intraloop #(
         .fb_chromar8x8(fb_chromar8x8));
     
     always @ (negedge clk) begin
+    
         if (reset == 1)
-            enabler = 12'd0;
+            enabler = 10'd0;
+            
         else begin
-            enabler = (enabler<<1) | enable;
+        
+            if (first) begin
+                enabler <= 10'd1;
+                first <= 0;
+            end
+            else begin
+                lastbit = enabler[9];
+                enabler[9:1] = enabler[8:0];
+                enabler[0] = lastbit;
+            end
+                        
         end
+        
     end
     
 endmodule

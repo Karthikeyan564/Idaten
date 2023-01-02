@@ -16,9 +16,7 @@ module reconstructor #(
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
     output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
-    
-    reg [15:0] row, col;
-    
+        
     wire [7:0] toppixels_luma4x4 [7:0];
 	wire [7:0] toppixels_chromab8x8 [7:0];
 	wire [7:0] toppixels_chromar8x8 [7:0];

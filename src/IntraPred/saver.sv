@@ -9,20 +9,13 @@ module saver #(
     input clk,
     input reset,
     input enable,
-    output reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0],
     input [31:0] mbnumber,
     input signed [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0],
+    output reg [7:0] reconstructed [(LENGTH*WIDTH)-1:0],
     output reg fb);
     
     reg [4:0] i, j;
-    
-    
-    
-    int resi;
-    initial for (resi = 0; resi < (LENGTH*WIDTH); resi = resi + 1) reconstructed[resi] = 8'd0;
-    
-    reg [12:0] row;
-    reg [12:0] col;
+    reg [15:0] row, col;
 
     always @(posedge clk) begin
         

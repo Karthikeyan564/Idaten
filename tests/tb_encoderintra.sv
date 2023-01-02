@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module tb_intraloop #(
+module tb_encoderintra #(
     parameter WIDTH = 1280,
     parameter LENGTH = 720
 );
@@ -16,7 +16,7 @@ module tb_intraloop #(
         .enable(enable), 
         .done_luma4x4(done_luma4x4), 
         .done_chromab8x8(done_chromab8x8), 
-        .done_chromar8x8(done_chroma8x8));
+        .done_chromar8x8(done_chromar8x8));
         
     initial begin
     
