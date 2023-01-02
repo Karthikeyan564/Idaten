@@ -5,7 +5,7 @@ module tran_4x4 #(
     input clk,
     input enable,
     input reset,
-    input [7:0] residuals [15:0],
+    input signed [7:0] residuals [15:0],
     output reg signed [BIT_LENGTH : 0] transformed [15:0]);
     
     reg signed [BIT_LENGTH : 0] intermediate [15:0];

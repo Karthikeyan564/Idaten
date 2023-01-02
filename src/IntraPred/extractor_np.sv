@@ -11,6 +11,7 @@ module extractor_np #(
     input reset,
     input enable,
     input [31:0] mbnumber,
+    input [7:0] reconstructed [(LENGTH*WIDTH)-1:0],
     output reg [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0],
     output reg [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0]);
             
@@ -33,28 +34,28 @@ module extractor_np #(
             if (MB_SIZE_W == 4) begin
                 // Fetch toppixels
                 for (j = 0; j < 8; j = j + 1) 
-                    toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (row == 0 ? 128 : (ureconstructor.usaver_luma4x4.reconstructed[((row-1)*LENGTH) + (col+16'(j))])));
+                    toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (row == 0 ? 128 : (reconstructed[((row-1)*LENGTH) + (col+16'(j))])));
                 // Fetch leftpixels
-                leftpixels[0] = (row == 0 ? 128 : ureconstructor.usaver_luma4x4.reconstructed[((row-1)*LENGTH) + (col-1)]);
+                leftpixels[0] = (row == 0 ? 128 : reconstructed[((row-1)*LENGTH) + (col-1)]);
                 for (i = 0; i < 4; i = i + 1) 
-                    leftpixels[5'(i)+1] = ((col == 0) ? 128 : (ureconstructor.usaver_luma4x4.reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
+                    leftpixels[5'(i)+1] = ((col == 0) ? 128 : (reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
             end
             else begin
                 if (CHROMAB == 1) begin
                      // Fetch toppixels
                     for (j = 0; j < MB_SIZE_W; j = j + 1) 
-                        toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (row == 0 ? 128 : (ureconstructor.usaver_chromab8x8.reconstructed[((row-1)*LENGTH) + (col+16'(j))])));
+                        toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (reconstructed[((row-1)*LENGTH) + (col+16'(j))]));
                     // Fetch leftpixels
                     for (i = 0; i < MB_SIZE_L; i = i +1) 
-                        leftpixels[5'(i)] = ((col == 0) ? 128 : (ureconstructor.usaver_chromab8x8.reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
+                        leftpixels[5'(i)] = ((col == 0) ? 128 : (reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
                 end
                 else begin
                     // Fetch toppixels
                     for (j = 0; j < MB_SIZE_W; j = j + 1) 
-                        toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (row == 0 ? 128 : (ureconstructor.usaver_chromar8x8.reconstructed[((row-1)*LENGTH) + (col+16'(j))])));
+                        toppixels[5'(j)] = ((col == LENGTH-4)  ? 128 : (reconstructed[((row-1)*LENGTH) + (col+16'(j))]));
                     // Fetch leftpixels
                     for (i = 0; i < MB_SIZE_L; i = i +1) 
-                        leftpixels[5'(i)] = ((col == 0) ? 128 : (ureconstructor.usaver_chromar8x8.reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
+                        leftpixels[5'(i)] = ((col == 0) ? 128 : (reconstructed[((row+16'(i))*LENGTH) + (col-1)]));
                 end
             end
                         

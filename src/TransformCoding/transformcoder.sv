@@ -6,7 +6,7 @@ module transformcoder #(
     input reset,
     input [3:0] enabler,
     input [5:0] QP,
-    input [7:0] residuals [15:0],
+    input signed [7:0] residuals [15:0],
     output reg signed [7:0] processedres [15:0]);
 
     wire signed [BIT_LENGTH:0] res2tran [15:0];

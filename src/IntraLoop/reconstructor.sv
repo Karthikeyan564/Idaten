@@ -9,6 +9,9 @@ module reconstructor #(
     input clk,
     input reset,
     input [2:0] enabler,
+    input [7:0] reconstructed_luma [1280*720 - 1: 0],
+    input [7:0] reconstructed_chb [1280*720 - 1: 0],
+    input [7:0] reconstructed_chr [1280*720 - 1:0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
@@ -36,6 +39,7 @@ module reconstructor #(
         .enable(enabler[0]),
         .mbnumber(mbnumber_luma4x4),
         .toppixels(toppixels_luma4x4),
+        .reconstructed(reconstructed_luma),
         .leftpixels(leftpixels_luma4x4));
 
     // ChromaB 8x8
@@ -45,6 +49,7 @@ module reconstructor #(
         .enable(enabler[0]),
         .mbnumber(mbnumber_chromab8x8),
         .toppixels(toppixels_chromab8x8),
+        .reconstructed(reconstructed_chb),
         .leftpixels(leftpixels_chromab8x8));
                
     // ChromaR 8x8
@@ -54,6 +59,7 @@ module reconstructor #(
         .enable(enabler[0]),
         .mbnumber(mbnumber_chromar8x8),
         .toppixels(toppixels_chromar8x8),
+        .reconstructed(reconstructed_chr),
         .leftpixels(leftpixels_chromar8x8));
         
     // Predict Modes and Reconstruct Block
@@ -98,6 +104,7 @@ module reconstructor #(
         .enable(enabler[2]),
         .mbnumber(mbnumber_luma4x4),
         .reconst(reconst_luma4x4),
+        .reconstructed(reconstructed_luma),
         .fb(fb_luma4x4));
         
     // ChromaB 8x8
@@ -107,6 +114,7 @@ module reconstructor #(
         .enable(enabler[2]),
         .mbnumber(mbnumber_chromab8x8),
         .reconst(reconst_chromab8x8),
+        .reconstructed(reconstructed_chb),
         .fb(fb_chromab8x8));
                
     // ChromaR 8x8
@@ -116,6 +124,7 @@ module reconstructor #(
         .enable(enabler[2]),
         .mbnumber(mbnumber_chromar8x8),
         .reconst(reconst_chromar8x8),
+        .reconstructed(reconstructed_chr),
         .fb(fb_chromar8x8));
         
 endmodule

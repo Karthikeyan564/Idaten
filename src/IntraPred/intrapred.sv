@@ -6,6 +6,9 @@ module intrapred #(
 	input clk,
 	input reset,
 	input [3:0] enabler,
+    input [7:0] reconstructed_luma [1280*720 - 1: 0],
+    input [7:0] reconstructed_chb [1280*720 - 1: 0],
+    input [7:0] reconstructed_chr [1280*720 - 1:0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
 	output [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
 	output signed [7:0] res_luma4x4 [15:0], res_chromab8x8 [63:0], res_chromar8x8 [63:0]);
@@ -82,6 +85,7 @@ module intrapred #(
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber_luma4x4),
+        .reconstructed(reconstructed_luma),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4));
 
@@ -91,6 +95,7 @@ module intrapred #(
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber_chromab8x8),
+        .reconstructed(reconstructed_chb),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8));
                
@@ -100,6 +105,7 @@ module intrapred #(
         .reset(reset),
         .enable(enabler[0]),
         .mbnumber(mbnumber_chromar8x8),
+        .reconstructed(reconstructed_chr),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8));
         

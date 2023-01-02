@@ -10,11 +10,18 @@ module encoder_intra (
     reg first_luma4x4_e1, first_chromab8x8_e1, first_chromar8x8_e1, first_luma4x4_e2, first_chromab8x8_e2, first_chromar8x8_e2;
     
     reg [31:0] mbnumber_luma4x4_e1, mbnumber_chromab8x8_e1, mbnumber_chromar8x8_e1, mbnumber_luma4x4_e2, mbnumber_chromab8x8_e2, mbnumber_chromar8x8_e2;
+    reg reconstructed_luma [1280*720 - 1: 0];
+    reg reconstructed_chb [1280*720 - 1: 0];
+    reg reconstructed_chr [280*720 - 1:0];
+    
     
     intraloop intraloop_e1 (
         .clk(clk),
         .reset(reset),
         .enable(enable),
+        .reconstructed_luma(reconstructed_luma),
+        .reconstructed_chb(reconstructed_chb),
+        .reconstructed_chr(reconstructed_chr),
         .mbnumber_luma4x4(mbnumber_luma4x4_e1),
         .mbnumber_chromab8x8(mbnumber_chromab8x8_e1),
         .mbnumber_chromar8x8(mbnumber_chromar8x8_e1),
@@ -26,6 +33,9 @@ module encoder_intra (
         .clk(clk),
         .reset(reset),
         .enable(enable),
+        .reconstructed_luma(reconstructed_luma),
+        .reconstructed_chb(reconstructed_chb),
+        .reconstructed_chr(reconstructed_chr),
         .mbnumber_luma4x4(mbnumber_luma4x4_e2),
         .mbnumber_chromab8x8(mbnumber_chromab8x8_e2),
         .mbnumber_chromar8x8(mbnumber_chromar8x8_e2),
