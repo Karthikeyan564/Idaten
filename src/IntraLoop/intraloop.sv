@@ -9,10 +9,11 @@ module intraloop #(
     input [7:0] reconstructed_chb [921599 :0 ],
     input [7:0] reconstructed_chr [921599 :0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
-    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
+    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8,
+    output [7:0] reconst_luma4x4 [15:0], reconst_chromab8x8 [63:0], reconst_chromar8x8 [63:0]);
     
     // Enable Register
-    reg [9:0] enabler = 10'd0;
+    reg [8:0] enabler = 9'd0;
     reg lastbit, first;
 //  0 -> Extractor NP
 //  1 -> Extractor MB and Moder
@@ -23,8 +24,7 @@ module intraloop #(
 //  6 -> Forward Quantize
 //  7 -> Inverse Quantize
 //  8 -> Inverse Transform and Extractor NP
-//  9 -> PredAdder
-//  10-> Saver
+//  9 -> PredAdder (and Saver)
 
     initial begin
         first = 1;
@@ -176,22 +176,25 @@ module intraloop #(
         .residue_chromar8x8(processedres_chromar8x8),
         .fb_luma4x4(fb_luma4x4),
         .fb_chromab8x8(fb_chromab8x8),
-        .fb_chromar8x8(fb_chromar8x8));
+        .fb_chromar8x8(fb_chromar8x8),
+        .reconst_luma4x4(reconst_luma4x4),
+        .reconst_chromab8x8(reconst_chromab8x8),
+        .reconst_chromar8x8(reconst_chromar8x8));
     
     always @ (negedge clk) begin
     
         if (reset == 1)
-            enabler = 10'd0;
+            enabler = 9'd0;
             
         else begin
         
             if (first) begin
-                enabler <= 10'd1;
+                enabler <= 9'd1;
                 first <= 0;
             end
             else begin
-                lastbit = enabler[9];
-                enabler[9:1] = enabler[8:0];
+                lastbit = enabler[8];
+                enabler[8:1] = enabler[7:0];
                 enabler[0] = lastbit;
             end
                         

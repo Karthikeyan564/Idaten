@@ -1,21 +1,29 @@
 `timescale 1ns / 1ps
 
-module encoder_intra (
+module encoder_intra #(
+    parameter LENGTH = 720,
+    parameter WIDTH = 1280)(
     input clk,
     input reset,
     input enable,
     output reg done_luma4x4, done_chromab8x8, done_chromar8x8);
     
+    reg [7:0] reconstructed_luma [1280*720-1: 0];
+    reg [7:0] reconstructed_chb [1280*720-1: 0];
+    reg [7:0] reconstructed_chr [1280*720-1:0];
+    
     wire fb_luma4x4_e1, fb_chromab8x8_e1, fb_chromar8x8_e1, fb_luma4x4_e2, fb_chromab8x8_e2, fb_chromar8x8_e2;
     reg first_luma4x4_e1, first_chromab8x8_e1, first_chromar8x8_e1, first_luma4x4_e2, first_chromab8x8_e2, first_chromar8x8_e2;
     
     reg [31:0] mbnumber_luma4x4_e1, mbnumber_chromab8x8_e1, mbnumber_chromar8x8_e1, mbnumber_luma4x4_e2, mbnumber_chromab8x8_e2, mbnumber_chromar8x8_e2;
-    reg [7:0] reconstructed_luma [1280*720-1: 0];
-    reg [7:0] reconstructed_chb [1280*720-1: 0];
-    reg [7:0] reconstructed_chr [1280*720-1:0];
-    reg [7:0] reconstructedtest [1280*720-1: 0];
     
-    integer i;
+    reg [7:0] reconst_luma4x4_e1 [15:0], reconst_luma4x4_e2 [15:0];
+    reg [7:0] reconst_chromab8x8_e1 [63:0], reconst_chromab8x8_e2 [63:0];
+    reg [7:0] reconst_chromar8x8_e1 [63:0], reconst_chromar8x8_e2 [63:0];
+    
+    reg [15:0] row, col;
+    
+    integer i, j;
     
     initial for (i = 0; i < 1280*720; i = i + 1) begin
         reconstructed_luma[i] = 8'd0;
@@ -35,7 +43,10 @@ module encoder_intra (
         .mbnumber_chromar8x8(mbnumber_chromar8x8_e1),
         .fb_luma4x4(fb_luma4x4_e1),
         .fb_chromab8x8(fb_chromab8x8_e1),
-        .fb_chromar8x8(fb_chromar8x8_e1));
+        .fb_chromar8x8(fb_chromar8x8_e1),
+        .reconst_luma4x4(reconst_luma4x4_e1),
+        .reconst_chromab8x8(reconst_chromab8x8_e1),
+        .reconst_chromar8x8(reconst_chromar8x8_e1));
         
     intraloop intraloop_e2 (
         .clk(clk),
@@ -49,7 +60,10 @@ module encoder_intra (
         .mbnumber_chromar8x8(mbnumber_chromar8x8_e2),
         .fb_luma4x4(fb_luma4x4_e2),
         .fb_chromab8x8(fb_chromab8x8_e2),
-        .fb_chromar8x8(fb_chromar8x8_e2));
+        .fb_chromar8x8(fb_chromar8x8_e2),
+        .reconst_luma4x4(reconst_luma4x4_e2),
+        .reconst_chromab8x8(reconst_chromab8x8_e2),
+        .reconst_chromar8x8(reconst_chromar8x8_e2));
     
     initial begin
         done_luma4x4 = 0;
@@ -94,6 +108,10 @@ module encoder_intra (
         end
     
     always @ (posedge fb_luma4x4_e1) begin
+
+        for (i = 0; i < 4; i = i +1) 
+            for (j = 0; j < 4; j = j + 1) 
+                reconstructed_luma[(((mbnumber_luma4x4_e1[31:16])+13'(i))*LENGTH)+((mbnumber_luma4x4_e1[15:0])+13'(j))] = reconst_luma4x4_e1[(i*4)+j]; 
     
         if (first_luma4x4_e1) begin
             mbnumber_luma4x4_e1 = 32'h40000;
@@ -111,6 +129,10 @@ module encoder_intra (
     
     always @ (posedge fb_luma4x4_e2) begin
     
+        for (i = 0; i < 4; i = i +1) 
+            for (j = 0; j < 4; j = j + 1) 
+                reconstructed_luma[(((mbnumber_luma4x4_e2[31:16])+13'(i))*LENGTH)+((mbnumber_luma4x4_e2[15:0])+13'(j))] = reconst_luma4x4_e2[(i*4)+j]; 
+
         if (first_luma4x4_e2) begin
             mbnumber_luma4x4_e2 = 32'h8;
             first_luma4x4_e2 = 0;
@@ -127,6 +149,10 @@ module encoder_intra (
     
     always @ (posedge fb_chromab8x8_e1) begin
     
+        for (i = 0; i < 8; i = i +1) 
+            for (j = 0; j < 8; j = j + 1) 
+                reconstructed_chb[(((mbnumber_chromab8x8_e1[31:16])+13'(i))*LENGTH)+((mbnumber_chromab8x8_e1[15:0])+13'(j))] = reconst_chromab8x8_e1[(i*8)+j];
+
         if (first_chromab8x8_e1) begin
             mbnumber_chromab8x8_e1 = 32'h80000;
             first_chromab8x8_e1 = 0;
@@ -142,6 +168,10 @@ module encoder_intra (
     end
     
     always @ (posedge fb_chromab8x8_e2) begin
+    
+        for (i = 0; i < 8; i = i +1) 
+            for (j = 0; j < 8; j = j + 1) 
+                reconstructed_chb[(((mbnumber_chromab8x8_e2[31:16])+13'(i))*LENGTH)+((mbnumber_chromab8x8_e2[15:0])+13'(j))] = reconst_chromab8x8_e2[(i*8)+j];
     
         if (first_chromab8x8_e2) begin
             mbnumber_chromab8x8_e2 = 32'h16;
@@ -159,6 +189,10 @@ module encoder_intra (
     
     always @ (posedge fb_chromar8x8_e1) begin
     
+        for (i = 0; i < 8; i = i +1) 
+            for (j = 0; j < 8; j = j + 1) 
+                reconstructed_chr[(((mbnumber_chromar8x8_e1[31:16])+13'(i))*LENGTH)+((mbnumber_chromar8x8_e1[15:0])+13'(j))] = reconst_chromar8x8_e1[(i*8)+j];
+    
         if (first_chromar8x8_e1) begin
             mbnumber_chromar8x8_e1 = 32'h80000;
             first_chromar8x8_e1 = 0;
@@ -174,6 +208,10 @@ module encoder_intra (
     end
     
     always @ (posedge fb_chromar8x8_e2) begin
+    
+        for (i = 0; i < 8; i = i +1) 
+            for (j = 0; j < 8; j = j + 1) 
+                reconstructed_chr[(((mbnumber_chromar8x8_e2[31:16])+13'(i))*LENGTH)+((mbnumber_chromar8x8_e2[15:0])+13'(j))] = reconst_chromar8x8_e2[(i*8)+j];
     
         if (first_chromar8x8_e2) begin
             mbnumber_chromar8x8_e2 = 32'h16;

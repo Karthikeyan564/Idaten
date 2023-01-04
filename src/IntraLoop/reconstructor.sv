@@ -15,7 +15,8 @@ module reconstructor #(
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
-    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8);
+    output fb_luma4x4, fb_chromab8x8, fb_chromar8x8,
+    output [7:0] reconst_luma4x4 [15:0], reconst_chromab8x8 [63:0], reconst_chromar8x8 [63:0]);
         
     wire [7:0] toppixels_luma4x4 [7:0];
 	wire [7:0] toppixels_chromab8x8 [7:0];
@@ -25,10 +26,6 @@ module reconstructor #(
 	wire [7:0] leftpixels_chromab8x8 [7:0];
 	wire [7:0] leftpixels_chromar8x8 [7:0];
 	
-	wire [7:0] reconst_luma4x4 [15:0];
-	wire [7:0] reconst_chromab8x8 [63:0];
-	wire [7:0] reconst_chromar8x8 [63:0];
-    
     // Retrieve Neighbouring Pixels		
 	// Luma 4x4
 	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
@@ -70,7 +67,8 @@ module reconstructor #(
         .residue(residue_luma4x4),
         .toppixels(toppixels_luma4x4),
         .leftpixels(leftpixels_luma4x4),
-        .reconst(reconst_luma4x4)); 
+        .reconst(reconst_luma4x4),
+        .fb(fb_luma4x4)); 
         
     // ChromaB 8x8
     predadder #(.MB_SIZE_L(8), .MB_SIZE_W(8)) upredadder_chromab8x8 (
@@ -81,7 +79,8 @@ module reconstructor #(
         .residue(residue_chromab8x8),
         .toppixels(toppixels_chromab8x8),
         .leftpixels(leftpixels_chromab8x8),
-        .reconst(reconst_chromab8x8)); 
+        .reconst(reconst_chromab8x8),
+        .fb(fb_chromab8x8)); 
         
     // ChromaR 8x8
     predadder #(.MB_SIZE_L(8), .MB_SIZE_W(8)) upredadder_chromar8x8 (
@@ -92,37 +91,7 @@ module reconstructor #(
         .residue(residue_chromar8x8),
         .toppixels(toppixels_chromar8x8),
         .leftpixels(leftpixels_chromar8x8),
-        .reconst(reconst_chromar8x8)); 
-        
-    // Save Reconstructed Block
-    // Luma 4x4
-	saver #(.MB_SIZE_L(4), .MB_SIZE_W(4)) usaver_luma4x4 (
-        .clk(clk),
-        .reset(reset),
-        .enable(enabler[2]),
-        .mbnumber(mbnumber_luma4x4),
-        .reconst(reconst_luma4x4),
-        .reconstructed(reconstructed_luma),
-        .fb(fb_luma4x4));
-        
-    // ChromaB 8x8
-    saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromab8x8 (
-        .clk(clk),
-        .reset(reset),
-        .enable(enabler[2]),
-        .mbnumber(mbnumber_chromab8x8),
-        .reconst(reconst_chromab8x8),
-        .reconstructed(reconstructed_chb),
-        .fb(fb_chromab8x8));
-               
-    // ChromaR 8x8
-    saver #(.MB_SIZE_L(8), .MB_SIZE_W(8)) usaver_chromar8x8 (
-        .clk(clk),
-        .reset(reset),
-        .enable(enabler[2]),
-        .mbnumber(mbnumber_chromar8x8),
         .reconst(reconst_chromar8x8),
-        .reconstructed(reconstructed_chr),
-        .fb(fb_chromar8x8));
+        .fb(fb_chromar8x8)); 
         
 endmodule

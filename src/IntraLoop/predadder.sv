@@ -12,6 +12,7 @@ module predadder #(
     input [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0],
     input [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0],
     input [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0],
+    output reg fb,
     output reg [7:0] reconst [(MB_SIZE_L*MB_SIZE_W)-1:0]);
 
     // Counters
@@ -270,8 +271,12 @@ module predadder #(
             for (k = 0; k < (MB_SIZE_L*MB_SIZE_W); k = k + 1)
                 reconst[6'(k)] = pred[6'(k)] + residue[6'(k)];
 
+            fb = 1;
+
         end
 
     end
+
+    always @ (negedge clk) if (fb) fb = 0;
 
 endmodule
