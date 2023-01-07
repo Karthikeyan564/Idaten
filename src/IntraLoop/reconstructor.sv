@@ -9,9 +9,9 @@ module reconstructor #(
     input clk,
     input reset,
     input [2:0] enabler,
-    input [7:0] reconstructed_luma [1280*720 - 1: 0],
-    input [7:0] reconstructed_chb [1280*720 - 1: 0],
-    input [7:0] reconstructed_chr [1280*720 - 1:0],
+    input [7:0] reconstructed_luma [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chb [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chr [WIDTH*LENGTH-1:0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     input [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
     input signed [7:0] residue_luma4x4 [15:0], residue_chromab8x8 [63:0], residue_chromar8x8 [63:0],
@@ -28,7 +28,7 @@ module reconstructor #(
 	
     // Retrieve Neighbouring Pixels		
 	// Luma 4x4
-	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
+	extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
@@ -38,7 +38,7 @@ module reconstructor #(
         .leftpixels(leftpixels_luma4x4));
 
     // ChromaB 8x8
-    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
+    extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
@@ -48,7 +48,7 @@ module reconstructor #(
         .leftpixels(leftpixels_chromab8x8));
                
     // ChromaR 8x8
-    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
+    extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),

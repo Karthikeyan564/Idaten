@@ -1,13 +1,15 @@
 `timescale 1ns / 1ps
 
 module intraloop #(
+    parameter WIDTH = 1280,
+    parameter LENGTH = 720,
     parameter QP = 2)(
     input clk,
     input reset,
     input enable,
-    input [7:0] reconstructed_luma [921599 :0 ],
-    input [7:0] reconstructed_chb [921599 :0 ],
-    input [7:0] reconstructed_chr [921599 :0],
+    input [7:0] reconstructed_luma [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chb [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chr [WIDTH*LENGTH-1:0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
     output fb_luma4x4, fb_chromab8x8, fb_chromar8x8,
     output [7:0] reconst_luma4x4 [15:0], reconst_chromab8x8 [63:0], reconst_chromar8x8 [63:0]);
@@ -107,7 +109,7 @@ module intraloop #(
 	   
     end
     
-    intrapred uintrapred (
+    intrapred #(.WIDTH(WIDTH), .LENGTH(LENGTH)) uintrapred (
         .clk(clk),
         .reset(reset),
         .enabler(enabler[3:0]),
@@ -158,10 +160,10 @@ module intraloop #(
         
     endgenerate
         
-    reconstructor ureconstructor (
+    reconstructor #(.WIDTH(WIDTH), .LENGTH(LENGTH)) ureconstructor (
         .clk(clk),
         .reset(reset),
-        .enabler(enabler[9:7]),
+        .enabler(enabler[8:7]),
         .mbnumber_luma4x4(mbnumber_luma4x4),
         .mbnumber_chromab8x8(mbnumber_chromab8x8),
         .mbnumber_chromar8x8(mbnumber_chromar8x8),

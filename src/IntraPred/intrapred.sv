@@ -1,14 +1,15 @@
 `timescale 1ns/1ps
 
 module intrapred #(
-    parameter MB_NUMBER_BITS = 12,
+    parameter WIDTH = 1280,
+    parameter LENGTH = 720,
     parameter BIT_LENGTH = 31)(
 	input clk,
 	input reset,
 	input [3:0] enabler,
-    input [7:0] reconstructed_luma [1280*720 - 1: 0],
-    input [7:0] reconstructed_chb [1280*720 - 1: 0],
-    input [7:0] reconstructed_chr [1280*720 - 1:0],
+    input [7:0] reconstructed_luma [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chb [WIDTH*LENGTH-1:0],
+    input [7:0] reconstructed_chr [WIDTH*LENGTH-1:0],
     input [31:0] mbnumber_luma4x4, mbnumber_chromab8x8, mbnumber_chromar8x8,
 	output [2:0] mode_luma4x4, mode_chromab8x8, mode_chromar8x8,
 	output signed [7:0] res_luma4x4 [15:0], res_chromab8x8 [63:0], res_chromar8x8 [63:0]);
@@ -59,7 +60,7 @@ module intrapred #(
 	wire [7:0] dcpred_chromar8x8 [63:0];
 	
 	// Residues
-	wire [7:0] allres_luma4x4 [7:0][15:0];
+	wire signed [7:0] allres_luma4x4 [7:0][15:0];
 //	0 -> wire [7:0] vres_luma4x4 [15:0];
 //	1 -> wire [7:0] hres_luma4x4 [15:0];
 //	2 -> wire [7:0] vlres_luma4x4 [15:0];
@@ -80,7 +81,7 @@ module intrapred #(
 	
 	// Retrieve neighbouring pixels		
 	// Luma 4x4
-	extractor_np #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
+	extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_np_luma4x4 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
@@ -90,7 +91,7 @@ module intrapred #(
         .leftpixels(leftpixels_luma4x4));
 
     // ChromaB 8x8
-    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
+    extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
@@ -100,7 +101,7 @@ module intrapred #(
         .leftpixels(leftpixels_chromab8x8));
                
     // ChromaR 8x8
-    extractor_np #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
+    extractor_np #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_np_chromar8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[0]),
@@ -111,7 +112,7 @@ module intrapred #(
         
     // Retrieve Macroblock
     // Luma 4x4
-    extractor_mb #(.MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_mb_luma4x4 (
+    extractor_mb #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(4), .MB_SIZE_W(4)) uextractor_mb_luma4x4 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[1]),
@@ -119,7 +120,7 @@ module intrapred #(
         .mb(mb_luma4x4));
 		
     // ChromaB 8x8
-    extractor_mb #(.MB_SIZE_L(8), .MB_SIZE_W(8), .CHROMAB(1)) uextractor_mb_chromab8x8 (
+    extractor_mb #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromab8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[1]),
@@ -127,7 +128,7 @@ module intrapred #(
         .mb(mb_chromab8x8));
     
     // ChromaR 8x8  
-    extractor_mb #(.MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromar8x8 (
+    extractor_mb #(.WIDTH(WIDTH), .LENGTH(LENGTH), .MB_SIZE_L(8), .MB_SIZE_W(8)) uextractor_mb_chromar8x8 (
         .clk(clk),
         .reset(reset),
         .enable(enabler[1]),

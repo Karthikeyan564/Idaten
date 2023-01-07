@@ -9,7 +9,7 @@ module predadder #(
     input reset,
     input enable,
     input [2:0] mode,
-    input [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0],
+    input signed [7:0] residue [(MB_SIZE_L*MB_SIZE_W)-1:0],
     input [7:0] toppixels [(MB_SIZE_W == 4 ? 7 : MB_SIZE_W-1):0],
     input [7:0] leftpixels [(MB_SIZE_L == 4 ? 4 : MB_SIZE_L-1):0],
     output reg fb,
