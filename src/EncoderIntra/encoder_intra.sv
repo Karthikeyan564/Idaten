@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module encoder_intra #(
-    parameter LENGTH = 32,
-    parameter WIDTH = 32)(
+    parameter LENGTH = 16,
+    parameter WIDTH = 16)(
     input clk,
     input reset,
     input enable,
