@@ -15,7 +15,7 @@ module extractor_mb #(
     reg [7:0] image [(LENGTH*WIDTH)-1:0];
     
     initial begin
-		$readmemh("output.mem", image);
+		$readmemh("frame.mem", image);
 	end
 
     reg [15:0] row, col;
